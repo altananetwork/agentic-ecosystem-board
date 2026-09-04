@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "chain": {
+    "slug": "bnb",
+    "chainId": 56,
+    "name": "BNB Chain",
+    "shortName": "BNB",
+    "color": "#f0b90b",
+    "explorerUrl": "https://bscscan.com",
+    "scanUrl": "https://8004scan.io/agents?chain=56",
+    "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+  },
+  "asOf": "2026-09-04T04:12:00.000Z",
+  "totals": {
+    "agents": 301996,
+    "uniqueOwners": 92057,
+    "walletsWithAssets": 60112,
+    "totalAssetsUsd": 11771394,
+    "byToken": [
+      {
+        "symbol": "BNB",
+        "amount": 3412.5,
+        "usd": 2960640
+      },
+      {
+        "symbol": "USDT",
+        "amount": 6120400,
+        "usd": 6120400
+      },
+      {
+        "symbol": "USDC",
+        "amount": 2690354,
+        "usd": 2690354
+      }
+    ],
+    "nativePriceUsd": 867.6
+  },
+  "activity": {
+    "windowDays": 30,
+    "since": "2026-09-02",
+    "daysCovered": 3,
+    "activeWallets": 17496,
+    "netFlowUsd": 369394,
+    "volumeUsd": 74189208.59
+  },
+  "registrationsDaily": [
+    {
+      "date": "2026-08-05",
+      "count": 3704
+    },
+    {
+      "date": "2026-08-06",
+      "count": 2991
+    },
+    {
+      "date": "2026-08-07",
+      "count": 2618
+    },
+    {
+      "date": "2026-08-08",
+      "count": 1861
+    },
+    {
+      "date": "2026-08-09",
+      "count": 2526
+    },
+    {
+      "date": "2026-08-10",
+      "count": 3871
+    },
+    {
+      "date": "2026-08-11",
+      "count": 2865
+    },
+    {
+      "date": "2026-08-12",
+      "count": 2258
+    },
+    {
+      "date": "2026-08-13",
+      "count": 2164
+    },
+    {
+      "date": "2026-08-14",
+      "count": 2815
+    },
+    {
+      "date": "2026-08-15",
+      "count": 3889
+    },
+    {
+      "date": "2026-08-16",
+      "count": 2603
+    },
+    {
+      "date": "2026-08-17",
+      "count": 1840
+    },
+    {
+      "date": "2026-08-18",
+      "count": 2542
+    },
+    {
+      "date": "2026-08-19",
+      "count": 2975
+    },
+    {
+      "date": "2026-08-20",
+      "count": 3756
+    },
+    {
+      "date": "2026-08-21",
+      "count": 2240
+    },
+    {
+      "date": "2026-08-22",
+      "count": 2183
+    },
+    {
+      "date": "2026-08-23",
+      "count": 2826
+    },
+    {
+      "date": "2026-08-24",
+      "count": 2986
+    },
+    {
+      "date": "2026-08-25",
+      "count": 3488
+    },
+    {
+      "date": "2026-08-26",
+      "count": 1820
+    },
+    {
+      "date": "2026-08-27",
+      "count": 2558
+    },
+    {
+      "date": "2026-08-28",
+      "count": 2979
+    },
+    {
+      "date": "2026-08-29",
+      "count": 2846
+    },
+    {
+      "date": "2026-08-30",
+      "count": 3121
+    },
+    {
+      "date": "2026-08-31",
+      "count": 2202
+    },
+    {
+      "date": "2026-09-01",
+      "count": 2836
+    },
+    {
+      "date": "2026-09-02",
+      "count": 2983
+    },
+    {
+      "date": "2026-09-03",
+      "count": 2573
+    },
+    {
+      "date": "2026-09-04",
+      "count": 2700
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-09-02",
+      "agents": 296110,
+      "totalAssetsUsd": 11402000,
+      "walletsWithAssets": 59380,
+      "netFlowUsd": 0
+    },
+    {
+      "date": "2026-09-03",
+      "agents": 299040,
+      "totalAssetsUsd": 11588000,
+      "walletsWithAssets": 59810,
+      "netFlowUsd": 186000
+    },
+    {
+      "date": "2026-09-04",
+      "agents": 301996,
+      "totalAssetsUsd": 11771394,
+      "walletsWithAssets": 60112,
+      "netFlowUsd": 183394
+    }
+  ],
+  "topProjects": [
+    {
+      "project": "Ave.ai",
+      "agents": 64850,
+      "share": 0.21473794354892117
+    },
+    {
+      "project": "Debot",
+      "agents": 9686,
+      "share": 0.03207327249367541
+    },
+    {
+      "project": "TermiX",
+      "agents": 3000,
+      "share": 0.009933906409356416
+    },
+    {
+      "project": "MevX",
+      "agents": 492,
+      "share": 0.001629160651134452
+    },
+    {
+      "project": "OpenClaw",
+      "agents": 242,
+      "share": 0.0008013351170214175
+    },
+    {
+      "project": "AIAgent",
+      "agents": 202,
+      "share": 0.0006688830315633319
+    },
+    {
+      "project": "Other",
+      "agents": 223524,
+      "share": 0.7401554987483278
+    }
+  ],
+  "methodology": [
+    "Agents are every token minted by the ERC-8004 identity registry on this chain, as indexed by 8004scan and cross-checked against the registry contract.",
+    "Owner wallets are the current holders of those agent tokens. One wallet can own many agents.",
+    "Holdings are read directly from the chain once a day for the native token and the configured stablecoins, then valued in USD at that time.",
+    "Wallets with assets are owner wallets whose tracked holdings are worth more than zero dollars.",
+    "Active wallets are owner wallets whose tracked balances changed during the window. Net flow is the sum of daily changes in USD across all owner wallets.",
+    "Top projects come from ordered rules on agent names, descriptions and metadata hosts. Agents that match no rule are counted under Other."
+  ],
+  "sources": {
+    "agents": {
+      "name": "The Graph, Agent0 subgraph",
+      "url": "https://thegraph.com/explorer/subgraphs/D6aWqowLkWqBgcqmpNKXuNikPkob24ADXCciiP8Hvn1K",
+      "detail": "subgraph D6aW\u2026vn1K",
+      "asOf": "2026-09-04T04:05:00.000Z",
+      "value": 333972
+    },
+    "crossCheck": {
+      "name": "8004scan",
+      "url": "https://8004scan.io/agents?chain=56",
+      "detail": "public API, chain 56",
+      "asOf": "2026-09-04T04:05:30.000Z",
+      "value": 302519
+    },
+    "holdings": {
+      "name": "On-chain via Multicall3",
+      "url": "https://bscscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11",
+      "detail": "RPC bsc-rpc.publicnode.com, 270064 wallets",
+      "asOf": "2026-09-04T04:11:40.000Z"
+    },
+    "prices": {
+      "name": "Binance spot",
+      "url": "https://www.binance.com/en/trade/BNB_USDT",
+      "detail": "BNBUSDT",
+      "asOf": "2026-09-04T04:10:00.000Z",
+      "value": 715.02
+    }
+  }
+}

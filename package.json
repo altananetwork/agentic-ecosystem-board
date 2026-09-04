@@ -1,0 +1,33 @@
+{
+  "name": "agentic-ecosystem-board",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.pipeline.json",
+    "test": "bun test",
+    "validate": "bun run scripts/validate.ts",
+    "sync": "bun run scripts/sync.ts",
+    "balances": "bun run scripts/balances.ts",
+    "build:data": "bun run scripts/build.ts",
+    "all": "bun run scripts/run-all.ts"
+  },
+  "dependencies": {
+    "next": "^15.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0",
+    "@types/node": "^22.9.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": { "node": ">=20" }
+}

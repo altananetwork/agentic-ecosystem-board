@@ -1,0 +1,159 @@
+/* Design tokens from the Altana Network Brand Kit v2.0 (altana-design-system). */
+
+:root {
+  color-scheme: light dark;
+
+  --bg-primary:  oklch(0.992 0.002 250);
+  --bg-surface:  oklch(0.972 0.003 250);
+  --bg-elevated: oklch(0.955 0.004 250);
+  --bg-overlay:  oklch(1 0 0);
+  --bg-inset:    oklch(0.963 0.003 250);
+
+  --text-primary:   oklch(0.20 0.005 265);
+  --text-secondary: oklch(0.46 0.008 265);
+  --text-tertiary:  oklch(0.64 0.006 265);
+  --text-on-accent: oklch(1 0 0);
+
+  --accent:         oklch(0.55 0.20 264);
+  --accent-hover:   oklch(0.47 0.18 264);
+  --accent-subtle:  oklch(0.55 0.20 264 / 0.08);
+  --accent-surface: oklch(0.55 0.20 264 / 0.05);
+  --accent-border:  oklch(0.55 0.20 264 / 0.25);
+
+  --success:        oklch(0.65 0.18 155);
+  --success-ink:    oklch(0.45 0.15 155);
+  --success-subtle: oklch(0.65 0.18 155 / 0.10);
+
+  --warning:        oklch(0.75 0.16 80);
+  --warning-ink:    oklch(0.50 0.14 70);
+  --warning-subtle: oklch(0.75 0.16 80 / 0.10);
+
+  --error:          oklch(0.58 0.20 25);
+  --error-ink:      oklch(0.48 0.18 25);
+  --error-subtle:   oklch(0.58 0.20 25 / 0.10);
+
+  --border:         oklch(0.92 0.004 250);
+  --border-active:  oklch(0.86 0.006 250);
+
+  --chain-bnb:      #f0b90b;
+  --chain-ethereum: #627eea;
+  --chain-base:     #0052ff;
+
+  --font-sans: 'Inter Tight', system-ui, -apple-system, sans-serif;
+
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-badge: 6px;
+
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  12px;
+  --space-lg:  16px;
+  --space-xl:  24px;
+  --space-2xl: 32px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary:  oklch(0.17 0.006 260);
+    --bg-surface:  oklch(0.21 0.006 260);
+    --bg-elevated: oklch(0.25 0.007 260);
+    --bg-overlay:  oklch(0.21 0.006 260);
+    --bg-inset:    oklch(0.24 0.007 260);
+
+    --text-primary:   oklch(0.96 0.003 260);
+    --text-secondary: oklch(0.74 0.008 260);
+    --text-tertiary:  oklch(0.58 0.008 260);
+
+    --accent:         oklch(0.68 0.17 264);
+    --accent-hover:   oklch(0.76 0.15 264);
+    --accent-subtle:  oklch(0.68 0.17 264 / 0.14);
+    --accent-surface: oklch(0.68 0.17 264 / 0.08);
+    --accent-border:  oklch(0.68 0.17 264 / 0.35);
+
+    --success-ink:    oklch(0.78 0.15 155);
+    --warning-ink:    oklch(0.82 0.14 80);
+    --error-ink:      oklch(0.75 0.16 25);
+
+    --border:         oklch(0.30 0.006 260);
+    --border-active:  oklch(0.38 0.008 260);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+button { font-family: inherit; cursor: pointer; }
+input { font-family: inherit; }
+
+h1, h2, h3 { margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--space-2xl);
+}
+
+.section { margin-top: var(--space-2xl); }
+.section-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+.section-h h2 { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+.section-h p { color: var(--text-secondary); font-size: 13px; }
+.section-h h2 { white-space: nowrap; }
+@media (max-width: 720px) {
+  .section-h { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .section-h h2 { white-space: normal; }
+}
+
+.card {
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: var(--radius-badge);
+  background: var(--bg-inset);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.muted { color: var(--text-secondary); }
+.faint { color: var(--text-tertiary); }
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 var(--space-lg); }
+}
+@media (max-width: 480px) {
+  .wrap { padding: 0 var(--space-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

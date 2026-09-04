@@ -1,0 +1,39 @@
+.field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  /* Soft fade in from the left so the wash does not start abruptly; type lives left of 55%. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 48%, rgba(0, 0, 0, 0.7) 62%, #000 72%);
+  mask-image: linear-gradient(to right, transparent 0%, transparent 48%, rgba(0, 0, 0, 0.7) 62%, #000 72%);
+}
+/* The engine centres its core on its container and wanders about a third of the box width
+   from there, so a 50%-wide box starting at 57% keeps the core between roughly 70% and 94%,
+   centred near 82% of the hero. */
+.box {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 57%;
+  width: 50%;
+}
+.canvas { display: block; width: 100%; height: 100%; }
+.still {
+  position: absolute;
+  left: calc(82% - 130px);
+  top: 50%;
+  transform: translateY(-50%);
+  height: 190%;
+  width: auto;
+  max-width: none;
+  opacity: 0.3;
+}
+@media (max-width: 720px) {
+  .field {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 60%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 60%, #000 100%);
+  }
+  .box { left: 30%; width: 70%; }
+  .still { left: auto; right: -20px; }
+}

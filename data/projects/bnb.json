@@ -1,0 +1,95 @@
+{
+  "$comment": "Ordered rules. First match wins. match: 'name' (agent name starts with), 'description' (description contains, case-insensitive), 'host' (agentURI host ends with). Add a rule by PR.",
+  "rules": [
+    {
+      "match": "name",
+      "value": "Ave.ai Trading Agent",
+      "project": "Ave.ai"
+    },
+    {
+      "match": "name",
+      "value": "Debot Trading Agent",
+      "project": "Debot"
+    },
+    {
+      "match": "name",
+      "value": "MevX Trading Agent",
+      "project": "MevX"
+    },
+    {
+      "match": "name",
+      "value": "OpenClaw Agent",
+      "project": "OpenClaw"
+    },
+    {
+      "match": "name",
+      "value": "AIAgent",
+      "project": "AIAgent"
+    },
+    {
+      "match": "description",
+      "value": "registered through TermiX",
+      "project": "TermiX"
+    },
+    {
+      "match": "host",
+      "value": "termix-platform-prod.s3.ap-southeast-1.amazonaws.com",
+      "project": "TermiX"
+    },
+    {
+      "match": "name",
+      "value": "CryptoMaster Agent",
+      "project": "CryptoMaster"
+    },
+    {
+      "match": "name",
+      "value": "APM Trading Agent",
+      "project": "APM"
+    },
+    {
+      "match": "name",
+      "value": "Uxento Agent",
+      "project": "Uxento"
+    },
+    {
+      "match": "host",
+      "value": "evoevo.ai",
+      "project": "EvoEvo"
+    },
+    {
+      "match": "host",
+      "value": "q402.quackai.ai",
+      "project": "QuackAI"
+    },
+    {
+      "match": "host",
+      "value": "build4.io",
+      "project": "Build4"
+    },
+    {
+      "match": "host",
+      "value": "build4-1.onrender.com",
+      "project": "Build4"
+    },
+    {
+      "match": "host",
+      "value": "bitagent.s3.ap-southeast-1.amazonaws.com",
+      "project": "BitAgent"
+    },
+    {
+      "match": "host",
+      "value": "clawbot.autos",
+      "project": "Clawbot"
+    },
+    {
+      "match": "host",
+      "value": "api.fengshuibnb.com",
+      "project": "FengShui BNB"
+    },
+    {
+      "match": "host",
+      "value": "logearn.s3.ap-northeast-1.amazonaws.com",
+      "project": "LogEarn"
+    }
+  ]
+}

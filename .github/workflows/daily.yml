@@ -1,0 +1,96 @@
+name: Daily data refresh
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+    inputs:
+      chain:
+        description: "Chain slug to refresh (empty = all chains)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      # Optional private endpoints, comma separated, one secret per chain slug.
+      RPC_URLS_BNB: ${{ secrets.RPC_URLS_BNB }}
+      # Optional. With it, agents come from The Graph's Agent0 subgraph (fast); without it, from 8004scan.
+      GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - name: Restore pipeline cache (agents database and wallet state)
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: cache
+          key: pipeline-cache-${{ github.run_id }}
+          restore-keys: |
+            pipeline-cache-
+
+      - name: Restore cache from the backup release when the Actions cache is empty
+        if: steps.cache.outputs.cache-matched-key == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p cache
+          if gh release download data-backup --pattern 'cache.tar.gz' --dir /tmp 2>/dev/null; then
+            tar -xzf /tmp/cache.tar.gz -C .
+            echo "Restored cache from the data-backup release"
+          else
+            echo "No backup release yet; the pipeline will backfill from scratch"
+          fi
+
+      - name: Run pipeline (sync, balances, build)
+        run: |
+          if [ -n "${{ github.event.inputs.chain }}" ]; then
+            bun run all --chain "${{ github.event.inputs.chain }}"
+          else
+            bun run all
+          fi
+
+      - name: Commit snapshots and payloads
+        run: |
+          git config user.name "agentic-board-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add data/snapshots public/data
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "data: daily refresh $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Save pipeline cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: cache
+          key: pipeline-cache-${{ github.run_id }}
+
+      - name: Back up cache to the data-backup release
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tar -czf /tmp/cache.tar.gz cache
+          gh release view data-backup >/dev/null 2>&1 || gh release create data-backup --title "Pipeline cache backup" --notes "Rolling backup of the pipeline cache. Not a software release." --prerelease
+          gh release upload data-backup /tmp/cache.tar.gz --clobber

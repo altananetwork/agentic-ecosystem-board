@@ -1,0 +1,17 @@
+.nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+.link:hover { border-color: var(--border-active); color: var(--text-primary); }
+.active { background: var(--text-primary); border-color: var(--text-primary); color: var(--bg-primary); }
+.active:hover { color: var(--bg-primary); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }

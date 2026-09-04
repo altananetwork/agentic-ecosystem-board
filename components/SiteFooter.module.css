@@ -1,0 +1,12 @@
+.footer {
+  margin-top: 56px;
+  border-top: 1px solid var(--border);
+  padding: 28px 0 40px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.inner { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; }
+.credit { display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); }
+.credit img { width: 16px; height: 16px; display: block; }
+.credit a { color: var(--text-primary); }
+.credit a:hover { color: var(--accent); }
