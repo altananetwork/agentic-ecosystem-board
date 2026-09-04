@@ -2,7 +2,8 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { BoardPayload, IndexPayload } from "@/pipeline/types";
 
-const DATA_DIR = path.join(process.cwd(), "public", "data");
+/** Payload directory. BOARD_DATA_DIR lets tests point at fixtures. */
+const DATA_DIR = process.env.BOARD_DATA_DIR ?? path.join(process.cwd(), "public", "data");
 const CHAINS_DIR = path.join(process.cwd(), "chains");
 const SLUG = /^[a-z0-9-]+$/;
 

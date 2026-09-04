@@ -1,4 +1,9 @@
 import { describe, expect, test } from "bun:test";
+import path from "node:path";
+
+// Point lib/board at committed fixtures so the test does not depend on published data.
+process.env.BOARD_DATA_DIR = path.join(import.meta.dir, "fixtures", "data");
+
 import { configuredSlugs, knownSlugs, readBoard, readIndex } from "../lib/board";
 import {
   formatAmount,
