@@ -14,8 +14,8 @@ The working database and wallet state live in the Actions cache and are backed u
 ## One-time setup
 
 1. Create the Vercel project from the GitHub repo. Framework: Next.js. No environment variables needed. Optionally set `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_REPO_URL`.
-2. In the GitHub repo settings, allow Actions to write: Settings > Actions > General > Workflow permissions > "Read and write permissions".
-3. Trigger the first run: Actions > Daily data refresh > Run workflow. The first BNB backfill takes about an hour.
+2. Allow Actions to write, so the daily job can commit data and update the backup release. Organisation first: Organisation settings > Actions > General > Workflow permissions > "Read and write permissions" (if the organisation locks this to read-only, the repository setting cannot override it). Then the same in the repository: Settings > Actions > General > Workflow permissions.
+3. The workflow only appears under Actions once it exists on the default branch (`main`), so release `staging` to `main` first. Then trigger the first run: Actions > Daily data refresh > Run workflow. With the `GRAPH_API_KEY` secret the BNB backfill takes a few minutes; without it, hours. A cache backup already exists on the `data-backup` release, so the first run starts incremental.
 4. Optional: add a repository secret `RPC_URLS_BNB` with your own endpoints, comma separated. Public endpoints work without it.
 
 ## Faster backfill with The Graph

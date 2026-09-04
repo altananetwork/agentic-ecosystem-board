@@ -65,6 +65,8 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
 
   const { totals, activity } = board;
   const partial = activity.daysCovered < activity.windowDays;
+  // Activity needs two snapshots to compare; the first day has nothing to measure yet.
+  const pending = activity.daysCovered < 2;
   const windowNote = partial ? `since ${activity.since}, ${activity.daysCovered} of ${activity.windowDays} days covered` : `since ${activity.since}`;
   const breakdown = totals.byToken.map((t) => formatAmount(t.amount, t.symbol)).join(", ");
   const history = board.history.map((h) => ({ date: h.date, value: h.totalAssetsUsd }));
@@ -92,8 +94,17 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
           <StatTile label="Unique owner wallets" value={formatCompact(totals.uniqueOwners)} title={formatInt(totals.uniqueOwners)} sub="wallets that currently own at least one agent" />
           <StatTile label="Wallets with assets" value={formatCompact(totals.walletsWithAssets)} title={formatInt(totals.walletsWithAssets)} sub="owner wallets holding tracked tokens" />
           <StatTile label="Total assets (USD)" value={formatUsdCompact(totals.totalAssetsUsd)} title={formatUsd(totals.totalAssetsUsd)} sub={breakdown} />
-          <StatTile label="Active wallets, last 30 days" value={formatCompact(activity.activeWallets)} title={formatInt(activity.activeWallets)} sub={windowNote} />
-          <StatTile label="Net flow, last 30 days" value={formatSignedUsd(activity.netFlowUsd)} title={formatUsd(activity.netFlowUsd)} sub={windowNote} />
+          {pending ? (
+            <>
+              <StatTile label="Active wallets, last 30 days" value="Pending" sub="measured from the second daily run onwards" />
+              <StatTile label="Net flow, last 30 days" value="Pending" sub="measured from the second daily run onwards" />
+            </>
+          ) : (
+            <>
+              <StatTile label="Active wallets, last 30 days" value={formatCompact(activity.activeWallets)} title={formatInt(activity.activeWallets)} sub={windowNote} />
+              <StatTile label="Net flow, last 30 days" value={formatSignedUsd(activity.netFlowUsd)} title={formatUsd(activity.netFlowUsd)} sub={windowNote} />
+            </>
+          )}
         </section>
 
         <section className={`section ${styles.charts}`}>
