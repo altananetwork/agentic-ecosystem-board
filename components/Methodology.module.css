@@ -1,0 +1,2 @@
+.list { margin: 0; padding: 18px 20px 18px 36px; display: grid; gap: 8px; color: var(--text-secondary); font-size: 13.5px; }
+.list li::marker { color: var(--text-tertiary); }

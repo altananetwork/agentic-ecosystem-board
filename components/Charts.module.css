@@ -1,0 +1,13 @@
+.chart { width: 100%; height: auto; display: block; }
+.gridLine { stroke: var(--border); stroke-width: 1; }
+.axisText { fill: var(--text-tertiary); font-size: 11px; font-family: var(--font-sans); }
+.bar { fill: var(--accent); }
+.bar:hover { fill: var(--accent-hover); }
+.line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.area { fill: var(--accent-subtle); }
+.point { fill: var(--accent); stroke: var(--bg-overlay); stroke-width: 2; }
+.single { padding: 28px 20px; text-align: center; }
+.single .n { font-size: 30px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-primary); }
+.single .note { color: var(--text-secondary); margin-top: 6px; font-size: 13px; }
+.body { padding: 16px 16px 8px; }
+.caption { display: flex; justify-content: space-between; gap: 12px; padding: 0 16px 14px; color: var(--text-secondary); font-size: 12.5px; }

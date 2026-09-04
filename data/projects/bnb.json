@@ -1,0 +1,12 @@
+{
+  "$comment": "Ordered rules. First match wins. match: 'name' (agent name starts with), 'description' (description contains, case-insensitive), 'host' (agentURI host ends with). Add a rule by PR.",
+  "rules": [
+    { "match": "name", "value": "Ave.ai Trading Agent", "project": "Ave.ai" },
+    { "match": "name", "value": "Debot Trading Agent", "project": "Debot" },
+    { "match": "name", "value": "MevX Trading Agent", "project": "MevX" },
+    { "match": "name", "value": "OpenClaw Agent", "project": "OpenClaw" },
+    { "match": "name", "value": "AIAgent", "project": "AIAgent" },
+    { "match": "description", "value": "registered through TermiX", "project": "TermiX" },
+    { "match": "host", "value": "termix-platform-prod.s3.ap-southeast-1.amazonaws.com", "project": "TermiX" }
+  ]
+}

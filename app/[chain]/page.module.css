@@ -1,0 +1,13 @@
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 32px 0 20px; }
+.top h1 { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+.dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.meta { color: var(--text-secondary); font-size: 13px; margin-top: 6px; }
+.links { display: flex; gap: 16px; font-size: 13px; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.chartCard { padding-top: 14px; }
+.chartCard h2 { font-size: 15px; font-weight: 600; padding: 0 16px 6px; }
+.notice { padding: 36px 20px; color: var(--text-secondary); }
+@media (max-width: 960px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) { .charts { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } }
