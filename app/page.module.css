@@ -1,4 +1,4 @@
-.intro { max-width: 720px; margin: 0; }
+.intro { max-width: 640px; margin: 0; }
 .intro h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 10px; }
 .intro p { color: var(--text-secondary); font-size: 15px; }
 .rows { display: grid; }

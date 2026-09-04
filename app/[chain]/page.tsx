@@ -106,11 +106,13 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
                 <span className={styles.dot} style={{ background: board.chain.color }} aria-hidden />
                 {board.chain.name}
               </h1>
-              <div className={styles.meta}>Data as of {formatUtc(board.asOf)}</div>
-            </div>
-            <div className={styles.links}>
-              <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
-              <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
+              <div className={styles.meta}>
+                Data as of {formatUtc(board.asOf)}
+                <span className={styles.links}>
+                  <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
+                  <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
+                </span>
+              </div>
             </div>
           </div>
           <div className={styles.tabs}>

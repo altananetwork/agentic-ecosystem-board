@@ -69,7 +69,9 @@ export function BrandField() {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={STILL_SRC} alt="" className={styles.still} />
       ) : (
-        <canvas ref={canvasRef} className={styles.canvas} />
+        <div className={styles.box}>
+          <canvas ref={canvasRef} className={styles.canvas} />
+        </div>
       )}
     </div>
   );
