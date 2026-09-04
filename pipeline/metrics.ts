@@ -17,6 +17,7 @@ export function buildSnapshot(args: { date: string; agents: number; uniqueOwners
     nativePriceUsd,
     netFlowUsd: round2(update.netFlowUsd),
     changedWallets: update.changedWallets,
+    grossFlowUsd: round2(update.grossFlowUsd),
     registrations,
   };
 }
@@ -50,7 +51,8 @@ export function activityWindow(snapshots: DailySnapshot[], state: WalletStateFil
   if (state) for (const w of Object.values(state.wallets)) if (w.lastChanged !== null && w.lastChanged >= since) activeWallets++;
   // The first snapshot has no previous run, so its netFlow is 0 by construction; summing is safe.
   const netFlowUsd = round2(inWindow.reduce((s, x) => s + x.netFlowUsd, 0));
-  return { windowDays, since, daysCovered, activeWallets, netFlowUsd };
+  const volumeUsd = round2(inWindow.reduce((s, x) => s + (x.grossFlowUsd ?? 0), 0));
+  return { windowDays, since, daysCovered, activeWallets, netFlowUsd, volumeUsd };
 }
 
 export function methodology(cfg: ChainConfig): string[] {

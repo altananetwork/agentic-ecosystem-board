@@ -2,25 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { StatTile } from "@/components/StatTile";
-import { BarChart } from "@/components/BarChart";
-import { AreaChart } from "@/components/AreaChart";
-import { TopProjects } from "@/components/TopProjects";
-import { Methodology } from "@/components/Methodology";
+import { KpiCard } from "@/components/KpiCard";
+import { Donut } from "@/components/Donut";
+import { DashboardNotes } from "@/components/DashboardNotes";
 import { Hero } from "@/components/Hero";
-import { Sources } from "@/components/Sources";
 import { ChainTabs, type ChainTab } from "@/components/ChainTabs";
 import { configuredSlugs, knownSlugs, readBoard, readIndex } from "@/lib/board";
 import { SITE_NAME } from "@/lib/site";
-import {
-  formatAmount,
-  formatCompact,
-  formatInt,
-  formatSignedUsd,
-  formatUsd,
-  formatUsdCompact,
-  formatUtc,
-} from "@/lib/format";
+import { formatInt, formatUsd, formatUsdCompact, formatUtc } from "@/lib/format";
 import styles from "./page.module.css";
 
 export const dynamic = "force-static";
@@ -86,14 +75,12 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
   }
 
   const { totals, activity } = board;
-  const partial = activity.daysCovered < activity.windowDays;
+  const tokens = totals.byToken.map((t) => t.symbol);
+  const tokenList = tokens.join(", ");
   // Activity needs two snapshots to compare; the first day has nothing to measure yet.
   const pending = activity.daysCovered < 2;
-  const windowNote = partial ? `since ${activity.since}, ${activity.daysCovered} of ${activity.windowDays} days covered` : `since ${activity.since}`;
-  const breakdown = totals.byToken.map((t) => formatAmount(t.amount, t.symbol)).join(", ");
-  const history = board.history.map((h) => ({ date: h.date, value: h.totalAssetsUsd }));
-  const agentsSource = board.sources ? { name: board.sources.agents.name, url: board.sources.agents.url } : undefined;
-  const holdingsSource = board.sources ? { name: board.sources.holdings.name, url: board.sources.holdings.url } : undefined;
+  const name = board.chain.name;
+  const asOf = board.asOf;
 
   return (
     <>
@@ -104,10 +91,10 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
             <div>
               <h1>
                 <span className={styles.dot} style={{ background: board.chain.color }} aria-hidden />
-                {board.chain.name}
+                {name}
               </h1>
               <div className={styles.meta}>
-                Data as of {formatUtc(board.asOf)}
+                Data as of {formatUtc(asOf)}
                 <span className={styles.links}>
                   <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
                   <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
@@ -120,60 +107,61 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
           </div>
         </Hero>
 
-        {board.sources ? (
-          <section className={styles.sources}>
-            <Sources sources={board.sources} />
-            <p className={styles.volumeNote}>
-              This board does not track transfer volume. Holdings are balances at read time and can fall while activity rises.
-            </p>
-          </section>
-        ) : null}
+        <section className={`card ${styles.block}`}>
+          <DashboardNotes chainName={name} tokens={tokens} agentsSource={board.sources?.agents.name} crossCheck={board.sources?.crossCheck?.name} />
+        </section>
 
-        <section className={styles.tiles}>
-          <StatTile label="Total agents" value={formatCompact(totals.agents)} title={formatInt(totals.agents)} sub="registered in the ERC-8004 identity registry" source={agentsSource} />
-          <StatTile label="Unique owner wallets" value={formatCompact(totals.uniqueOwners)} title={formatInt(totals.uniqueOwners)} sub="wallets that currently own at least one agent" source={agentsSource} />
-          <StatTile label="Wallets with assets" value={formatCompact(totals.walletsWithAssets)} title={formatInt(totals.walletsWithAssets)} sub="owner wallets holding tracked tokens" source={holdingsSource} />
-          <StatTile label="Assets held now (USD)" value={formatUsdCompact(totals.totalAssetsUsd)} title={formatUsd(totals.totalAssetsUsd)} sub={`${breakdown}, held in owner wallets at read time, not volume`} source={holdingsSource} />
+        <section className={styles.grid}>
+          <KpiCard title="Total agents" description="Registered ERC-8004 agents" value={formatInt(totals.agents)} chainName={name} asOf={asOf} />
+          <KpiCard title="Unique wallets" description="Distinct owner wallets across registered agents" value={formatInt(totals.uniqueOwners)} chainName={name} asOf={asOf} />
+          <KpiCard title="Wallets with assets" description={`Wallets holding ${tokenList}`} value={formatInt(totals.walletsWithAssets)} chainName={name} asOf={asOf} />
+          <KpiCard title="Total assets (USD)" description={tokens.join(" + ")} value={formatUsd(totals.totalAssetsUsd)} chainName={name} asOf={asOf} />
           {pending ? (
             <>
-              <StatTile label="Active wallets, last 30 days" value="Pending" sub="measured from the second daily run onwards" source={holdingsSource} />
-              <StatTile label="Net flow, last 30 days" value="Pending" sub="measured from the second daily run onwards" source={holdingsSource} />
+              <KpiCard title="30D total volume (USD)" description="Measured from the second daily run onwards" value="Pending" chainName={name} asOf={asOf} />
+              <KpiCard title="Active agent wallets, 30D" description="Measured from the second daily run onwards" value="Pending" chainName={name} asOf={asOf} />
             </>
           ) : (
             <>
-              <StatTile label="Active wallets, last 30 days" value={formatCompact(activity.activeWallets)} title={formatInt(activity.activeWallets)} sub={windowNote} source={holdingsSource} />
-              <StatTile label="Net flow, last 30 days" value={formatSignedUsd(activity.netFlowUsd)} title={formatUsd(activity.netFlowUsd)} sub={windowNote} source={holdingsSource} />
+              <KpiCard title="30D total volume (USD)" description="Gross balance movement across agent wallets, last 30 days" value={formatUsd(activity.volumeUsd)} chainName={name} asOf={asOf} />
+              <KpiCard title="Active agent wallets, 30D" description="Wallets whose balances moved in the last 30 days" value={formatInt(activity.activeWallets)} chainName={name} asOf={asOf} />
             </>
           )}
         </section>
 
-        <section className={`section ${styles.charts}`}>
-          <div className={`card ${styles.chartCard}`}>
-            <h2>New agents per day, last 31 days</h2>
-            <BarChart data={board.registrationsDaily} label="New agents per day" />
+        <section className={styles.grid}>
+          <div className={`card ${styles.panel}`}>
+            <div className={styles.panelHead}>
+              <div className={styles.panelTitle}>Top projects by agent count</div>
+              <div className={styles.panelDesc}>Named projects by registered ERC-8004 agents</div>
+            </div>
+            <Donut projects={board.topProjects} label={`Top projects on ${name} by agent count`} />
           </div>
-          <div className={`card ${styles.chartCard}`}>
-            <h2>Assets held (USD) over time</h2>
-            <AreaChart data={history} label="Total assets held by owner wallets" />
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-h">
-            <h2>Top projects by agent count</h2>
-            <p>Attribution from agent names, descriptions and metadata hosts. Improve it by pull request.</p>
-          </div>
-          <div className="card">
-            <TopProjects projects={board.topProjects} />
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="section-h">
-            <h2>How the numbers are computed</h2>
-          </div>
-          <div className="card">
-            <Methodology items={board.methodology} />
+          <div className={`card ${styles.panel}`}>
+            <div className={styles.panelHead}>
+              <div className={styles.panelTitle}>Top projects</div>
+              <div className={styles.panelDesc}>Named projects ranked by registered agent count</div>
+            </div>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Project</th>
+                  <th className={styles.num}>Agents</th>
+                </tr>
+              </thead>
+              <tbody>
+                {board.topProjects
+                  .filter((p) => p.project !== "Other")
+                  .map((p, i) => (
+                    <tr key={p.project}>
+                      <td>{i + 1}</td>
+                      <td>{p.project}</td>
+                      <td className={styles.num}>{formatInt(p.agents)}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </section>
       </main>

@@ -4,7 +4,7 @@ import type { DailySnapshot, WalletStateFile } from "../pipeline/types";
 import { CFG } from "./helpers";
 
 function snap(date: string, o: Partial<DailySnapshot> = {}): DailySnapshot {
-  return { date, agents: 100, uniqueOwners: 80, walletsWithAssets: 50, totalAssetsUsd: 1000, byToken: [], nativePriceUsd: 500, netFlowUsd: 10, changedWallets: 5, registrations: 3, ...o };
+  return { date, agents: 100, uniqueOwners: 80, walletsWithAssets: 50, totalAssetsUsd: 1000, byToken: [], nativePriceUsd: 500, netFlowUsd: 10, changedWallets: 5, grossFlowUsd: 25, registrations: 3, ...o };
 }
 
 const state: WalletStateFile = {
@@ -37,7 +37,7 @@ describe("metrics", () => {
   test("activity window with partial history", () => {
     const snaps = [snap("2026-08-30"), snap("2026-09-01", { netFlowUsd: -4 }), snap("2026-09-04")];
     const a = activityWindow(snaps, state, "2026-09-04");
-    expect(a).toEqual({ windowDays: 30, since: "2026-08-30", daysCovered: 3, activeWallets: 1, netFlowUsd: 16 });
+    expect(a).toEqual({ windowDays: 30, since: "2026-08-30", daysCovered: 3, activeWallets: 1, netFlowUsd: 16, volumeUsd: 75 });
     const b = activityWindow([snap("2026-07-01")], state, "2026-09-04");
     expect(b.daysCovered).toBe(0);
     expect(b.since).toBe("2026-09-04");
@@ -82,7 +82,7 @@ describe("metrics", () => {
   });
 
   test("buildSnapshot rounds and buildIndex sorts by agents", () => {
-    const s = buildSnapshot({ date: "2026-09-04", agents: 10, uniqueOwners: 9, nativePriceUsd: 500, registrations: 2, update: { next: state, netFlowUsd: 1.005, changedWallets: 2, walletsWithAssets: 3, totalAssetsUsd: 123.456, byToken: [{ symbol: "BNB", amount: 0.1234567, usd: 61.7283 }] } });
+    const s = buildSnapshot({ date: "2026-09-04", agents: 10, uniqueOwners: 9, nativePriceUsd: 500, registrations: 2, update: { next: state, netFlowUsd: 1.005, grossFlowUsd: 0, changedWallets: 2, walletsWithAssets: 3, totalAssetsUsd: 123.456, byToken: [{ symbol: "BNB", amount: 0.1234567, usd: 61.7283 }] } });
     expect(s.totalAssetsUsd).toBe(123.46);
     expect(s.byToken[0]).toEqual({ symbol: "BNB", amount: 0.123457, usd: 61.73 });
     const p1 = buildPayload({ cfg: CFG, snapshots: [], registrationsDaily: [], projectCounts: [], state: null, totals: { agents: 5, uniqueOwners: 5 }, asOf: "x", today: "2026-09-04" });

@@ -49,6 +49,7 @@ describe("state", () => {
       ["0xc", { BNB: 0n, USDT: 0n, USDC: 10n * E18 }], // new +10
     ]), prices, CFG, "2026-09-05");
     expect(d2.netFlowUsd).toBe(-30); // only 0xb moved; a wallet joining the set brings no flow
+    expect(d2.grossFlowUsd).toBe(30);
     expect(d2.changedWallets).toBe(1);
     expect(d2.next.wallets["0xa"].lastChanged).toBeNull(); // never observed moving
     expect(d2.next.wallets["0xb"].lastChanged).toBe("2026-09-05");

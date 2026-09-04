@@ -83,6 +83,8 @@ export type DailySnapshot = {
   netFlowUsd: number;
   /** wallets whose balances moved since the previous run */
   changedWallets: number;
+  /** sum of absolute token amount changes valued in USD since the previous run (gross movement) */
+  grossFlowUsd: number;
   registrations: number; // agents created on this date (UTC)
 };
 
@@ -105,6 +107,8 @@ export type BoardPayload = {
     daysCovered: number;
     activeWallets: number;
     netFlowUsd: number;
+    /** gross balance movement across owner wallets over the window, USD */
+    volumeUsd: number;
   };
   /** last 31 days, oldest first, zero-filled */
   registrationsDaily: { date: string; count: number }[];

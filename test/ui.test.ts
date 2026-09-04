@@ -31,6 +31,7 @@ describe("lib/board", () => {
     expect(board).not.toBeNull();
     expect(board!.chain.slug).toBe("bnb");
     expect(board!.registrationsDaily.length).toBe(31);
+    expect(board!.activity.volumeUsd).toBeGreaterThan(0);
     expect(board!.topProjects.length).toBeGreaterThan(0);
     expect(board!.totals.agents).toBeGreaterThanOrEqual(board!.totals.uniqueOwners);
   });
@@ -89,28 +90,43 @@ describe("lib/format", () => {
 });
 
 describe("components", () => {
-  test("Sources renders one row per source with links and values", async () => {
+  test("KpiCard renders title, description, centred number and footer", async () => {
     const { renderToString } = await import("react-dom/server");
-    const { Sources } = await import("../components/Sources");
+    const { KpiCard } = await import("../components/KpiCard");
     const { createElement } = await import("react");
-    const board = await readBoard("bnb");
-    const html = renderToString(createElement(Sources, { sources: board!.sources }));
-    for (const label of ["Agents", "Cross-check", "Holdings", "Prices"]) expect(html).toContain(label);
-    expect(html).toContain('href="https://8004scan.io/agents?chain=56"');
-    expect(html).toContain("333,972 agents");
-    expect(html).toContain("$715.02");
-    expect(renderToString(createElement(Sources, { sources: undefined }))).toBe("");
+    const html = renderToString(
+      createElement(KpiCard, { title: "Total agents", description: "Registered ERC-8004 agents", value: "334,195", chainName: "BNB Chain", asOf: "2026-09-04T14:00:00Z" }),
+    );
+    expect(html).toContain("Registered ERC-8004 agents");
+    expect(html).toContain("334,195");
+    expect(html.split("Total agents").length).toBe(3); // header and repeated under the number
+    expect(html).toContain("BNB Chain");
+    expect(html).toContain("Updated ");
   });
 
-  test("StatTile shows a source footnote link when given one", async () => {
+  test("Donut draws up to six named slices plus Other and a legend", async () => {
     const { renderToString } = await import("react-dom/server");
-    const { StatTile } = await import("../components/StatTile");
+    const { Donut } = await import("../components/Donut");
     const { createElement } = await import("react");
-    const html = renderToString(createElement(StatTile, { label: "Total agents", value: "334K", source: { name: "The Graph", url: "https://thegraph.com" } }));
-    expect(html).toContain("Source:");
-    expect(html).toContain('href="https://thegraph.com"');
-    const plain = renderToString(createElement(StatTile, { label: "x", value: "1" }));
-    expect(plain).not.toContain("Source:");
+    const board = await readBoard("bnb");
+    const html = renderToString(createElement(Donut, { projects: board!.topProjects, label: "Top projects" }));
+    const paths = (html.match(/<path /g) ?? []).length;
+    expect(paths).toBe(7); // six named projects plus Other in the fixture
+    expect(html).toContain("Other");
+    expect(html).toContain("Ave.ai");
+    expect(html).toContain("74.0%");
+    expect(html).toContain('role="img"');
+  });
+
+  test("DashboardNotes lists the six metrics and the token scope", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const { DashboardNotes } = await import("../components/DashboardNotes");
+    const { createElement } = await import("react");
+    const html = renderToString(createElement(DashboardNotes, { chainName: "BNB Chain", tokens: ["BNB", "USDT", "USDC"], agentsSource: "The Graph, Agent0 subgraph", crossCheck: "8004scan" }));
+    for (const t of ["Total agents:", "Unique wallets:", "Wallets with assets:", "Total assets:", "30D total volume:", "Active agent wallets, 30D:", "Top projects:"]) expect(html).toContain(t);
+    expect(html).toContain("cross-checked against 8004scan");
+    expect(html).toContain("BNB, USDT, USDC");
+    expect(html).not.toContain("\u2014");
   });
 
   test("ChainTabs marks the active chain and disables unpublished ones", async () => {

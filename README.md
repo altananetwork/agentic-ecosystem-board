@@ -7,10 +7,10 @@ Live board: (add the Vercel URL after the first deploy)
 ## What it shows, per chain
 
 - Total agents registered in the ERC-8004 Identity Registry
-- Unique owner wallets and how many of them hold assets
-- Total assets in USD (native coin plus configured stablecoins), with a breakdown
-- Active wallets and net USD flow over the last 30 days, from daily balance snapshots
-- New agents per day and the history of total assets
+- Unique owner wallets and wallets holding at least one tracked asset
+- Total assets held in the native coin plus configured stablecoins, in USD
+- 30-day total volume, measured as gross balance movement across agent wallets between daily snapshots
+- Active agent wallets over the last 30 days
 - Top projects by agent count
 
 BNB Chain is the first chain. Base and Celo are next; adding a chain is one JSON file.

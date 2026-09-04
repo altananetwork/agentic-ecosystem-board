@@ -10,37 +10,38 @@
     "scanUrl": "https://8004scan.io/agents?chain=56",
     "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
   },
-  "asOf": "2026-09-04T14:47:14.708Z",
+  "asOf": "2026-09-04T15:31:10.151Z",
   "totals": {
     "agents": 334195,
     "uniqueOwners": 270285,
-    "walletsWithAssets": 214681,
-    "totalAssetsUsd": 12345825.3,
+    "walletsWithAssets": 214646,
+    "totalAssetsUsd": 12394866.79,
     "byToken": [
       {
         "symbol": "BNB",
-        "amount": 10372.089695,
-        "usd": 7391254.84
+        "amount": 10394.236698,
+        "usd": 7447470.59
       },
       {
         "symbol": "USDT",
-        "amount": 4688681.625779,
-        "usd": 4688681.63
+        "amount": 4682694.812838,
+        "usd": 4682694.81
       },
       {
         "symbol": "USDC",
-        "amount": 265888.83844,
-        "usd": 265888.84
+        "amount": 264701.383539,
+        "usd": 264701.38
       }
     ],
-    "nativePriceUsd": 712.61
+    "nativePriceUsd": 716.5
   },
   "activity": {
     "windowDays": 30,
     "since": "2026-09-04",
     "daysCovered": 1,
-    "activeWallets": 2706,
-    "netFlowUsd": 2432.33
+    "activeWallets": 4617,
+    "netFlowUsd": 8694.06,
+    "volumeUsd": 258712.6
   },
   "registrationsDaily": [
     {
@@ -172,9 +173,9 @@
     {
       "date": "2026-09-04",
       "agents": 334195,
-      "totalAssetsUsd": 12345825.3,
-      "walletsWithAssets": 214681,
-      "netFlowUsd": 2432.33
+      "totalAssetsUsd": 12394866.79,
+      "walletsWithAssets": 214646,
+      "netFlowUsd": 8694.06
     }
   ],
   "topProjects": [
@@ -262,14 +263,14 @@
       "name": "On-chain via Multicall3",
       "url": "https://bscscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11",
       "detail": "RPC bsc-rpc.publicnode.com, 270,285 wallets, BNB, USDT, USDC",
-      "asOf": "2026-09-04T14:47:13.950Z"
+      "asOf": "2026-09-04T15:31:09.332Z"
     },
     "prices": {
       "name": "Binance spot",
       "url": "https://www.binance.com/en/trade/BNB_USDT",
       "detail": "BNBUSDT",
-      "asOf": "2026-09-04T14:47:13.950Z",
-      "value": 712.61
+      "asOf": "2026-09-04T15:31:09.332Z",
+      "value": 716.5
     }
   }
 }

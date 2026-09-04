@@ -49,6 +49,7 @@ export function usdOf(cfg: ChainConfig, raw: Record<string, bigint | string>, pr
 export type StateUpdate = {
   next: WalletStateFile;
   netFlowUsd: number;
+  grossFlowUsd: number;
   changedWallets: number;
   walletsWithAssets: number;
   totalAssetsUsd: number;
@@ -63,6 +64,7 @@ export function updateState(prev: WalletStateFile | null, today: Balances, price
   const wallets: Record<string, WalletState> = {};
   const first = prev === null;
   let netFlowUsd = 0;
+  let grossFlowUsd = 0;
   let changedWallets = 0;
   for (const [owner, raw] of today) {
     const rawStr: Record<string, string> = {};
@@ -77,6 +79,7 @@ export function updateState(prev: WalletStateFile | null, today: Balances, price
         for (const sym of Object.keys({ ...(before?.raw ?? {}), ...rawStr })) {
           const delta = toAmount(cfg, sym, rawStr[sym] ?? "0") - toAmount(cfg, sym, before?.raw[sym] ?? "0");
           netFlowUsd += delta * (prices[sym] ?? 0);
+          grossFlowUsd += Math.abs(delta) * (prices[sym] ?? 0);
         }
         changedWallets++;
       }
@@ -105,6 +108,7 @@ export function updateState(prev: WalletStateFile | null, today: Balances, price
   return {
     next,
     netFlowUsd: first ? 0 : netFlowUsd,
+    grossFlowUsd: first ? 0 : grossFlowUsd,
     changedWallets: first ? 0 : changedWallets,
     walletsWithAssets,
     totalAssetsUsd,
