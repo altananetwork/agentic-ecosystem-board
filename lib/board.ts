@@ -2,8 +2,10 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { BoardPayload, IndexPayload } from "@/pipeline/types";
 
-/** Payload directory. BOARD_DATA_DIR lets tests point at fixtures. */
-const DATA_DIR = process.env.BOARD_DATA_DIR ?? path.join(process.cwd(), "public", "data");
+/** Payload directory, resolved per call so BOARD_DATA_DIR can point tests at fixtures. */
+function dataDir(): string {
+  return process.env.BOARD_DATA_DIR ?? path.join(process.cwd(), "public", "data");
+}
 const CHAINS_DIR = path.join(process.cwd(), "chains");
 const SLUG = /^[a-z0-9-]+$/;
 
@@ -18,13 +20,13 @@ async function readJson<T>(file: string): Promise<T | null> {
 
 /** Cross-chain index written by the pipeline. Null when nothing has been published. */
 export async function readIndex(): Promise<IndexPayload | null> {
-  return readJson<IndexPayload>(path.join(DATA_DIR, "index.json"));
+  return readJson<IndexPayload>(path.join(dataDir(), "index.json"));
 }
 
 /** Per-chain board payload. Null for unknown slugs or before the first pipeline run. */
 export async function readBoard(slug: string): Promise<BoardPayload | null> {
   if (!SLUG.test(slug)) return null;
-  return readJson<BoardPayload>(path.join(DATA_DIR, `${slug}.json`));
+  return readJson<BoardPayload>(path.join(dataDir(), `${slug}.json`));
 }
 
 /** Slugs that have a chain config, whether or not a payload exists yet. */
