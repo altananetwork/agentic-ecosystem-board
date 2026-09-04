@@ -10,38 +10,38 @@
     "scanUrl": "https://8004scan.io/agents?chain=56",
     "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
   },
-  "asOf": "2026-09-04T15:31:10.151Z",
+  "asOf": "2026-09-04T15:54:37.267Z",
   "totals": {
-    "agents": 334195,
-    "uniqueOwners": 270285,
-    "walletsWithAssets": 214646,
-    "totalAssetsUsd": 12394866.79,
+    "agents": 334612,
+    "uniqueOwners": 270693,
+    "walletsWithAssets": 215053,
+    "totalAssetsUsd": 12434048.8,
     "byToken": [
       {
         "symbol": "BNB",
-        "amount": 10394.236698,
-        "usd": 7447470.59
+        "amount": 10445.797193,
+        "usd": 7486920.68
       },
       {
         "symbol": "USDT",
-        "amount": 4682694.812838,
-        "usd": 4682694.81
+        "amount": 4682025.127942,
+        "usd": 4682025.13
       },
       {
         "symbol": "USDC",
-        "amount": 264701.383539,
-        "usd": 264701.38
+        "amount": 265102.99518,
+        "usd": 265103
       }
     ],
-    "nativePriceUsd": 716.5
+    "nativePriceUsd": 716.74
   },
   "activity": {
     "windowDays": 30,
     "since": "2026-09-04",
     "daysCovered": 1,
-    "activeWallets": 4617,
-    "netFlowUsd": 8694.06,
-    "volumeUsd": 258712.6
+    "activeWallets": 5338,
+    "netFlowUsd": 4256.05,
+    "volumeUsd": 589589.69
   },
   "registrationsDaily": [
     {
@@ -166,38 +166,38 @@
     },
     {
       "date": "2026-09-04",
-      "count": 1770
+      "count": 2187
     }
   ],
   "history": [
     {
       "date": "2026-09-04",
-      "agents": 334195,
-      "totalAssetsUsd": 12394866.79,
-      "walletsWithAssets": 214646,
-      "netFlowUsd": 8694.06
+      "agents": 334612,
+      "totalAssetsUsd": 12434048.8,
+      "walletsWithAssets": 215053,
+      "netFlowUsd": 4256.05
     }
   ],
   "topProjects": [
     {
       "project": "EvoEvo",
-      "agents": 123837,
-      "share": 0.3706
+      "agents": 123853,
+      "share": 0.3701
     },
     {
       "project": "Ave.ai",
-      "agents": 118039,
-      "share": 0.3532
+      "agents": 118049,
+      "share": 0.3528
     },
     {
       "project": "TermiX",
-      "agents": 28626,
-      "share": 0.0857
+      "agents": 29024,
+      "share": 0.0867
     },
     {
       "project": "Debot",
       "agents": 9684,
-      "share": 0.029
+      "share": 0.0289
     },
     {
       "project": "QuackAI",
@@ -231,8 +231,8 @@
     },
     {
       "project": "Other",
-      "agents": 46693,
-      "share": 0.1397
+      "agents": 46686,
+      "share": 0.1395
     }
   ],
   "methodology": [
@@ -249,28 +249,28 @@
       "name": "The Graph, Agent0 subgraph",
       "url": "https://thegraph.com/explorer/subgraphs/D6aWqowLkWqBgcqmpNKXuNikPkob24ADXCciiP8Hvn1K",
       "detail": "subgraph D6aW…vn1K, registry 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
-      "asOf": "2026-09-04T14:44:38.845Z",
-      "value": 334195
+      "asOf": "2026-09-04T15:49:48.377Z",
+      "value": 334612
     },
     "crossCheck": {
       "name": "8004scan",
       "url": "https://8004scan.io/agents?chain=56",
       "detail": "chain id 56",
-      "asOf": "2026-09-04T14:44:38.845Z",
-      "value": 302823
+      "asOf": "2026-09-04T15:49:48.377Z",
+      "value": 303096
     },
     "holdings": {
       "name": "On-chain via Multicall3",
       "url": "https://bscscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11",
-      "detail": "RPC bsc-rpc.publicnode.com, 270,285 wallets, BNB, USDT, USDC",
-      "asOf": "2026-09-04T15:31:09.332Z"
+      "detail": "RPC bsc-rpc.publicnode.com, 270,693 wallets, BNB, USDT, USDC",
+      "asOf": "2026-09-04T15:54:37.158Z"
     },
     "prices": {
       "name": "Binance spot",
       "url": "https://www.binance.com/en/trade/BNB_USDT",
       "detail": "BNBUSDT",
-      "asOf": "2026-09-04T15:31:09.332Z",
-      "value": 716.5
+      "asOf": "2026-09-04T15:54:37.158Z",
+      "value": 716.74
     }
   }
 }
