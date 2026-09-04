@@ -5,6 +5,10 @@ import { attribute } from "./projects";
 import { addDays, todayUtc } from "./cli";
 import type { AgentRecord, ProjectRule } from "./types";
 
+/** Wallets that cannot spend: tokens sent here are burned, not owned. Excluded from owner metrics. */
+export const BURN_ADDRESSES = ["0x0000000000000000000000000000000000000000", "0x000000000000000000000000000000000000dead"] as const;
+const BURN_LIST = BURN_ADDRESSES.map((a) => `'${a}'`).join(",");
+
 const ROOT = join(import.meta.dir, "..");
 
 type Row = {
@@ -17,6 +21,7 @@ type Row = {
   x402: number;
   feedbacks: number;
   created_at: string;
+  uri_host: string | null;
 };
 
 function fromRow(r: Row): AgentRecord {
@@ -30,6 +35,7 @@ function fromRow(r: Row): AgentRecord {
     x402: r.x402 === 1,
     feedbacks: r.feedbacks,
     createdAt: r.created_at,
+    uriHost: r.uri_host ?? undefined,
   };
 }
 
@@ -50,6 +56,8 @@ export class AgentStore {
       feedbacks INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL
     );`);
+    const cols = (this.db.query("PRAGMA table_info(agents)").all() as { name: string }[]).map((c) => c.name);
+    if (!cols.includes("uri_host")) this.db.exec("ALTER TABLE agents ADD COLUMN uri_host TEXT;");
     this.db.exec("CREATE INDEX IF NOT EXISTS agents_owner ON agents(owner);");
     this.db.exec("CREATE INDEX IF NOT EXISTS agents_created ON agents(created_at);");
     this.db.exec("CREATE INDEX IF NOT EXISTS agents_project ON agents(project);");
@@ -67,10 +75,11 @@ export class AgentStore {
   }
 
   upsertMany(records: AgentRecord[], rules: ProjectRule[] = []): void {
-    const stmt = this.db.prepare(`INSERT INTO agents (token_id, owner, name, description, project, protocols, x402, feedbacks, created_at)
-      VALUES ($token_id, $owner, $name, $description, $project, $protocols, $x402, $feedbacks, $created_at)
+    const stmt = this.db.prepare(`INSERT INTO agents (token_id, owner, name, description, project, protocols, x402, feedbacks, created_at, uri_host)
+      VALUES ($token_id, $owner, $name, $description, $project, $protocols, $x402, $feedbacks, $created_at, $uri_host)
       ON CONFLICT(token_id) DO UPDATE SET owner=excluded.owner, name=excluded.name, description=excluded.description,
-        project=excluded.project, protocols=excluded.protocols, x402=excluded.x402, feedbacks=excluded.feedbacks, created_at=excluded.created_at`);
+        project=excluded.project, protocols=excluded.protocols, x402=excluded.x402, feedbacks=excluded.feedbacks, created_at=excluded.created_at,
+        uri_host=COALESCE(excluded.uri_host, agents.uri_host)`);
     const tx = this.db.transaction((rows: AgentRecord[]) => {
       for (const r of rows) {
         stmt.run({
@@ -83,6 +92,7 @@ export class AgentStore {
           $x402: r.x402 ? 1 : 0,
           $feedbacks: r.feedbacks ?? 0,
           $created_at: r.createdAt,
+          $uri_host: r.uriHost ?? null,
         });
       }
     });
@@ -102,12 +112,19 @@ export class AgentStore {
     return r.m;
   }
 
+  /** Latest createdAt stored (ISO) or null when empty. */
+  maxCreatedAt(): string | null {
+    const r = this.db.query("SELECT MAX(created_at) AS m FROM agents").get() as { m: string | null };
+    return r.m;
+  }
+
+  /** Distinct owner wallets, excluding burn addresses (agents sent there are not held by anyone). */
   owners(): string[] {
-    return (this.db.query("SELECT DISTINCT owner FROM agents ORDER BY owner").all() as { owner: string }[]).map((r) => r.owner);
+    return (this.db.query(`SELECT DISTINCT owner FROM agents WHERE owner NOT IN (${BURN_LIST}) ORDER BY owner`).all() as { owner: string }[]).map((r) => r.owner);
   }
 
   uniqueOwners(): number {
-    return (this.db.query("SELECT COUNT(DISTINCT owner) AS n FROM agents").get() as { n: number }).n;
+    return (this.db.query(`SELECT COUNT(DISTINCT owner) AS n FROM agents WHERE owner NOT IN (${BURN_LIST})`).get() as { n: number }).n;
   }
 
   *all(): IterableIterator<AgentRecord> {

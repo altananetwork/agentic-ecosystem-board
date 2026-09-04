@@ -30,10 +30,13 @@ export function round(n: number, places: number): number {
 }
 
 export function topProjects(counts: { project: string; agents: number }[], total: number, limit = TOP_PROJECTS): BoardPayload["topProjects"] {
-  const sorted = [...counts].sort((a, b) => b.agents - a.agents || a.project.localeCompare(b.project));
+  // Agents that matched no rule and have no usable name are grouped under Other, not shown as a project.
+  const named = counts.filter((c) => c.project !== "Unknown");
+  const unknown = counts.filter((c) => c.project === "Unknown").reduce((s, c) => s + c.agents, 0);
+  const sorted = [...named].sort((a, b) => b.agents - a.agents || a.project.localeCompare(b.project));
   const denom = total > 0 ? total : sorted.reduce((s, c) => s + c.agents, 0) || 1;
   const head = sorted.slice(0, limit).map((c) => ({ project: c.project, agents: c.agents, share: round(c.agents / denom, 4) }));
-  const rest = sorted.slice(limit).reduce((s, c) => s + c.agents, 0);
+  const rest = sorted.slice(limit).reduce((s, c) => s + c.agents, 0) + unknown;
   if (rest > 0) head.push({ project: "Other", agents: rest, share: round(rest / denom, 4) });
   return head;
 }
@@ -44,7 +47,7 @@ export function activityWindow(snapshots: DailySnapshot[], state: WalletStateFil
   const since = inWindow[0]?.date ?? today;
   const daysCovered = inWindow.length;
   let activeWallets = 0;
-  if (state) for (const w of Object.values(state.wallets)) if (w.lastChanged >= since) activeWallets++;
+  if (state) for (const w of Object.values(state.wallets)) if (w.lastChanged !== null && w.lastChanged >= since) activeWallets++;
   // The first snapshot has no previous run, so its netFlow is 0 by construction; summing is safe.
   const netFlowUsd = round2(inWindow.reduce((s, x) => s + x.netFlowUsd, 0));
   return { windowDays, since, daysCovered, activeWallets, netFlowUsd };
@@ -53,12 +56,12 @@ export function activityWindow(snapshots: DailySnapshot[], state: WalletStateFil
 export function methodology(cfg: ChainConfig): string[] {
   const tokens = [cfg.native.symbol, ...cfg.tokens.map((t) => t.symbol)].join(", ");
   return [
-    `Agents are ERC-8004 identities minted by the registry at ${cfg.registry} on ${cfg.name}, as indexed by 8004scan.`,
-    "Owner wallets are the current holders of those agent NFTs. One wallet can own many agents.",
+    `Agents are ERC-8004 identities minted by the registry at ${cfg.registry} on ${cfg.name}, as indexed by the Agent0 subgraph on The Graph and cross-checked against 8004scan. Counts can differ slightly between the two indexers.`,
+    "Owner wallets are the current holders of those agent NFTs. One wallet can own many agents. Burn addresses are excluded, so agents sent there count as agents but not as owners.",
     `Holdings are the ${tokens} balances of every owner wallet, read directly from the chain through Multicall3 at build time and priced in USD with the ${cfg.native.symbol} spot price from Binance.`,
     "Active wallets are owner wallets whose balances moved at least once inside the 30-day window, measured from one daily snapshot to the next.",
     "Net flow is the sum of all owner wallet balance changes in USD over the window. It is not gross transfer volume, which this board does not track.",
-    "Top projects group agents by the name they registered with, using the community-maintained rules file in the repository.",
+    "Top projects group agents by the name they registered with, or by the host of their metadata URI, using the community-maintained rules file in the repository.",
     "Every number on this page is rebuilt daily by a public pipeline and committed to the repository, so the full history is reproducible.",
   ];
 }

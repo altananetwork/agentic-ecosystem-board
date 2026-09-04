@@ -57,7 +57,10 @@ export type StateUpdate = {
 
 /** Folds today's balances into the previous state. Wallets absent from `today` keep their last values. */
 export function updateState(prev: WalletStateFile | null, today: Balances, prices: Prices, cfg: ChainConfig, date: string): StateUpdate {
-  const wallets: Record<string, WalletState> = { ...(prev?.wallets ?? {}) };
+  // Only wallets that currently own an agent are kept; wallets that transferred or burned
+  // their agents drop out, and burn addresses never enter because the store excludes them.
+  const previous = prev?.wallets ?? {};
+  const wallets: Record<string, WalletState> = {};
   const first = prev === null;
   let netFlowUsd = 0;
   let changedWallets = 0;
@@ -65,17 +68,17 @@ export function updateState(prev: WalletStateFile | null, today: Balances, price
     const rawStr: Record<string, string> = {};
     for (const [sym, v] of Object.entries(raw)) rawStr[sym] = v.toString();
     const usd = usdOf(cfg, raw, prices);
-    const before = wallets[owner];
+    const before = previous[owner];
     const moved = before ? Object.keys({ ...before.raw, ...rawStr }).some((k) => (before.raw[k] ?? "0") !== (rawStr[k] ?? "0")) : false;
     if (!first) {
       netFlowUsd += usd - (before?.usd ?? 0);
-      if (!before || moved) changedWallets++;
+      if (moved) changedWallets++;
     }
     wallets[owner] = {
       raw: rawStr,
       usd,
       firstSeen: before?.firstSeen ?? date,
-      lastChanged: before && !moved ? before.lastChanged : date,
+      lastChanged: moved ? date : (before?.lastChanged ?? null),
     };
   }
   const symbols = [cfg.native.symbol, ...cfg.tokens.map((t) => t.symbol)];

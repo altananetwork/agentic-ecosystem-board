@@ -18,6 +18,10 @@ The working database and wallet state live in the Actions cache and are backed u
 3. Trigger the first run: Actions > Daily data refresh > Run workflow. The first BNB backfill takes about an hour.
 4. Optional: add a repository secret `RPC_URLS_BNB` with your own endpoints, comma separated. Public endpoints work without it.
 
+## Faster backfill with The Graph
+
+8004scan throttles deep page reads, so a first backfill from it takes hours for a large chain. The Agent0 subgraph on The Graph serves the same agents in minutes. Create a free API key at https://thegraph.com/studio/apikeys/, add it as the repository secret `GRAPH_API_KEY`, and put it in your local `.env` as `GRAPH_API_KEY=...`. With the key set, the sync reads the subgraph first and then a few 8004scan pages to cross-check the total. Without the key everything still works from 8004scan alone; only the first backfill is slow.
+
 ## Run it by hand
 
 ```

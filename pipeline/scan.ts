@@ -96,6 +96,8 @@ export type SyncOptions = {
   sleepMs?: number;
   sleepImpl?: (ms: number) => Promise<void>;
   full?: boolean;
+  /** Stop after this many pages (light cross-check passes). */
+  maxPages?: number;
   log?: (msg: string) => void;
 };
 
@@ -151,6 +153,7 @@ export async function syncAgents(opts: SyncOptions): Promise<SyncResult> {
     }
     offset += page.items.length;
     if (offset >= total) break;
+    if (opts.maxPages !== undefined && fetchedPages >= opts.maxPages) break;
     if (sleepMs > 0) await sleepImpl(sleepMs);
   }
   return { fetchedPages, newAgents, updatedAgents, total };

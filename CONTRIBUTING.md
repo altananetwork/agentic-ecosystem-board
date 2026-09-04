@@ -14,6 +14,7 @@ Copy `chains/bnb.json` to `chains/<slug>.json` and fill it in:
 - `rpcs`: public HTTPS endpoints. Keyless. The pipeline rotates through them.
 - `native` and `tokens`: what to count as holdings. Stablecoins get a fixed `priceUsd: 1`; the native coin is priced from the Binance ticker symbol in `priceSymbol`.
 - `liveSince`: the date the registry went live on that chain.
+- `subgraphId` (optional): the Agent0 ERC-8004 subgraph for that chain on The Graph. When the pipeline has a `GRAPH_API_KEY`, agents come from the subgraph (minutes for a full backfill) and 8004scan is only used as a cross-check. Known Agent0 ids: Ethereum `FV6RR6y13rsnCxBAicKuQEwDp8ioEGiNaWaZUmvr1F8k`, Base `43s9hQRurMGjuYnC1r2ZwS6xSQktbFyXMPMqGKUFJojb`, BSC `D6aWqowLkWqBgcqmpNKXuNikPkob24ADXCciiP8Hvn1K`, Polygon `9q16PZv1JudvtnCAf44cBoxg82yK9SSsFvrjCY9xnneF`, Monad `4tvLxkczjhSaMiqRrCV1EyheYHyJ7Ad8jub1UUyukBjg`.
 
 Create an empty rules file at `data/projects/<slug>.json` (`{"rules": []}`) and run `bun run validate`. The daily job picks the chain up automatically after merge. The first run backfills every agent from 8004scan, which takes about a second per hundred agents.
 

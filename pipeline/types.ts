@@ -27,6 +27,8 @@ export type ChainConfig = {
   native: { symbol: string; decimals: number; priceSymbol: string };
   tokens: ChainToken[];
   liveSince: string;
+  /** Optional Agent0 subgraph id on The Graph; used when GRAPH_API_KEY is set. */
+  subgraphId?: string;
 };
 
 /** One agent as stored in the local cache (from 8004scan). */
@@ -40,6 +42,8 @@ export type AgentRecord = {
   x402: boolean;
   feedbacks: number;
   createdAt: string; // ISO
+  /** host of the agentURI when known (subgraph source); enables host rules */
+  uriHost?: string;
 };
 
 export type ProjectRule = {
@@ -54,7 +58,8 @@ export type WalletState = {
   raw: Record<string, string>;
   usd: number;
   firstSeen: string; // YYYY-MM-DD
-  lastChanged: string; // YYYY-MM-DD, date the balances last moved
+  /** YYYY-MM-DD of the last observed balance move; null until a move has been seen between two runs */
+  lastChanged: string | null;
 };
 
 export type WalletStateFile = {

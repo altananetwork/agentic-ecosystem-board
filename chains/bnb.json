@@ -13,10 +13,25 @@
     "https://bsc-dataseed.binance.org",
     "https://bsc-dataseed1.bnbchain.org"
   ],
-  "native": { "symbol": "BNB", "decimals": 18, "priceSymbol": "BNBUSDT" },
+  "native": {
+    "symbol": "BNB",
+    "decimals": 18,
+    "priceSymbol": "BNBUSDT"
+  },
   "tokens": [
-    { "symbol": "USDT", "address": "0x55d398326f99059fF775485246999027B3197955", "decimals": 18, "priceUsd": 1 },
-    { "symbol": "USDC", "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", "decimals": 18, "priceUsd": 1 }
+    {
+      "symbol": "USDT",
+      "address": "0x55d398326f99059fF775485246999027B3197955",
+      "decimals": 18,
+      "priceUsd": 1
+    },
+    {
+      "symbol": "USDC",
+      "address": "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      "decimals": 18,
+      "priceUsd": 1
+    }
   ],
-  "liveSince": "2026-02-03"
+  "liveSince": "2026-02-03",
+  "subgraphId": "D6aWqowLkWqBgcqmpNKXuNikPkob24ADXCciiP8Hvn1K"
 }

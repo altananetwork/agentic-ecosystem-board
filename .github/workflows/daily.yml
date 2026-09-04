@@ -24,6 +24,8 @@ jobs:
     env:
       # Optional private endpoints, comma separated, one secret per chain slug.
       RPC_URLS_BNB: ${{ secrets.RPC_URLS_BNB }}
+      # Optional. With it, agents come from The Graph's Agent0 subgraph (fast); without it, from 8004scan.
+      GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:

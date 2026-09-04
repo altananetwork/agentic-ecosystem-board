@@ -61,6 +61,9 @@ export function validateChain(cfg: ChainConfig): string[] {
   if (typeof cfg.liveSince !== "string" || !DATE_RE.test(cfg.liveSince) || Number.isNaN(Date.parse(cfg.liveSince))) {
     p.push(`${where}: liveSince must be YYYY-MM-DD`);
   }
+  if (cfg.subgraphId !== undefined && (typeof cfg.subgraphId !== "string" || !/^[1-9A-HJ-NP-Za-km-z]{20,64}$/.test(cfg.subgraphId))) {
+    p.push(`${where}: subgraphId must be a base58 subgraph id (or be omitted)`);
+  }
   return p;
 }
 
