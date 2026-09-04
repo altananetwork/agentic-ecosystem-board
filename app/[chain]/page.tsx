@@ -7,7 +7,10 @@ import { BarChart } from "@/components/BarChart";
 import { AreaChart } from "@/components/AreaChart";
 import { TopProjects } from "@/components/TopProjects";
 import { Methodology } from "@/components/Methodology";
-import { knownSlugs, readBoard, readIndex } from "@/lib/board";
+import { Hero } from "@/components/Hero";
+import { Sources } from "@/components/Sources";
+import { ChainTabs, type ChainTab } from "@/components/ChainTabs";
+import { configuredSlugs, knownSlugs, readBoard, readIndex } from "@/lib/board";
 import { SITE_NAME } from "@/lib/site";
 import {
   formatAmount,
@@ -42,10 +45,21 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
+/** Published chains first, then configured chains that have no payload yet (disabled). */
+async function chainTabs(index: Awaited<ReturnType<typeof readIndex>>): Promise<ChainTab[]> {
+  const published: ChainTab[] = (index?.chains ?? []).map((c) => ({ slug: c.slug, name: c.name, color: c.color, published: true }));
+  const seen = new Set(published.map((c) => c.slug));
+  const pending: ChainTab[] = (await configuredSlugs())
+    .filter((slug) => !seen.has(slug))
+    .map((slug) => ({ slug, name: slug.toUpperCase(), color: "var(--text-tertiary)", published: false }));
+  return [...published, ...pending];
+}
+
 export default async function ChainBoardPage({ params }: { params: Promise<Params> }) {
   const { chain } = await params;
   const [index, board] = await Promise.all([readIndex(), readBoard(chain)]);
   const chains = (index?.chains ?? []).map((c) => ({ slug: c.slug, name: c.name, color: c.color }));
+  const tabs = await chainTabs(index);
 
   if (!board) {
     const slugs = await knownSlugs();
@@ -54,7 +68,15 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
       <>
         <SiteHeader chains={chains} active={chain} />
         <main className="wrap">
-          <section className={`card ${styles.notice}`} style={{ marginTop: 32 }}>
+          <Hero>
+            <div className={styles.top}>
+              <h1>{chain.toUpperCase()}</h1>
+            </div>
+            <div className={styles.tabs}>
+              <ChainTabs chains={tabs} active={chain} />
+            </div>
+          </Hero>
+          <section className={`card ${styles.notice}`}>
             This chain is configured but has no published data yet. The daily pipeline writes the first payload after its first run.
           </section>
         </main>
@@ -70,39 +92,55 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
   const windowNote = partial ? `since ${activity.since}, ${activity.daysCovered} of ${activity.windowDays} days covered` : `since ${activity.since}`;
   const breakdown = totals.byToken.map((t) => formatAmount(t.amount, t.symbol)).join(", ");
   const history = board.history.map((h) => ({ date: h.date, value: h.totalAssetsUsd }));
+  const agentsSource = board.sources ? { name: board.sources.agents.name, url: board.sources.agents.url } : undefined;
+  const holdingsSource = board.sources ? { name: board.sources.holdings.name, url: board.sources.holdings.url } : undefined;
 
   return (
     <>
       <SiteHeader chains={chains} active={chain} />
       <main className="wrap">
-        <div className={styles.top}>
-          <div>
-            <h1>
-              <span className={styles.dot} style={{ background: board.chain.color }} aria-hidden />
-              {board.chain.name}
-            </h1>
-            <div className={styles.meta}>Data as of {formatUtc(board.asOf)}</div>
+        <Hero>
+          <div className={styles.top}>
+            <div>
+              <h1>
+                <span className={styles.dot} style={{ background: board.chain.color }} aria-hidden />
+                {board.chain.name}
+              </h1>
+              <div className={styles.meta}>Data as of {formatUtc(board.asOf)}</div>
+            </div>
+            <div className={styles.links}>
+              <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
+              <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
+            </div>
           </div>
-          <div className={styles.links}>
-            <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
-            <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
+          <div className={styles.tabs}>
+            <ChainTabs chains={tabs} active={chain} />
           </div>
-        </div>
+        </Hero>
+
+        {board.sources ? (
+          <section className={styles.sources}>
+            <Sources sources={board.sources} />
+            <p className={styles.volumeNote}>
+              This board does not track transfer volume. Holdings are balances at read time and can fall while activity rises.
+            </p>
+          </section>
+        ) : null}
 
         <section className={styles.tiles}>
-          <StatTile label="Total agents" value={formatCompact(totals.agents)} title={formatInt(totals.agents)} sub="registered in the ERC-8004 identity registry" />
-          <StatTile label="Unique owner wallets" value={formatCompact(totals.uniqueOwners)} title={formatInt(totals.uniqueOwners)} sub="wallets that currently own at least one agent" />
-          <StatTile label="Wallets with assets" value={formatCompact(totals.walletsWithAssets)} title={formatInt(totals.walletsWithAssets)} sub="owner wallets holding tracked tokens" />
-          <StatTile label="Total assets (USD)" value={formatUsdCompact(totals.totalAssetsUsd)} title={formatUsd(totals.totalAssetsUsd)} sub={breakdown} />
+          <StatTile label="Total agents" value={formatCompact(totals.agents)} title={formatInt(totals.agents)} sub="registered in the ERC-8004 identity registry" source={agentsSource} />
+          <StatTile label="Unique owner wallets" value={formatCompact(totals.uniqueOwners)} title={formatInt(totals.uniqueOwners)} sub="wallets that currently own at least one agent" source={agentsSource} />
+          <StatTile label="Wallets with assets" value={formatCompact(totals.walletsWithAssets)} title={formatInt(totals.walletsWithAssets)} sub="owner wallets holding tracked tokens" source={holdingsSource} />
+          <StatTile label="Assets held now (USD)" value={formatUsdCompact(totals.totalAssetsUsd)} title={formatUsd(totals.totalAssetsUsd)} sub={`${breakdown}, held in owner wallets at read time, not volume`} source={holdingsSource} />
           {pending ? (
             <>
-              <StatTile label="Active wallets, last 30 days" value="Pending" sub="measured from the second daily run onwards" />
-              <StatTile label="Net flow, last 30 days" value="Pending" sub="measured from the second daily run onwards" />
+              <StatTile label="Active wallets, last 30 days" value="Pending" sub="measured from the second daily run onwards" source={holdingsSource} />
+              <StatTile label="Net flow, last 30 days" value="Pending" sub="measured from the second daily run onwards" source={holdingsSource} />
             </>
           ) : (
             <>
-              <StatTile label="Active wallets, last 30 days" value={formatCompact(activity.activeWallets)} title={formatInt(activity.activeWallets)} sub={windowNote} />
-              <StatTile label="Net flow, last 30 days" value={formatSignedUsd(activity.netFlowUsd)} title={formatUsd(activity.netFlowUsd)} sub={windowNote} />
+              <StatTile label="Active wallets, last 30 days" value={formatCompact(activity.activeWallets)} title={formatInt(activity.activeWallets)} sub={windowNote} source={holdingsSource} />
+              <StatTile label="Net flow, last 30 days" value={formatSignedUsd(activity.netFlowUsd)} title={formatUsd(activity.netFlowUsd)} sub={windowNote} source={holdingsSource} />
             </>
           )}
         </section>
@@ -113,7 +151,7 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
             <BarChart data={board.registrationsDaily} label="New agents per day" />
           </div>
           <div className={`card ${styles.chartCard}`}>
-            <h2>Total assets (USD) over time</h2>
+            <h2>Assets held (USD) over time</h2>
             <AreaChart data={history} label="Total assets held by owner wallets" />
           </div>
         </section>

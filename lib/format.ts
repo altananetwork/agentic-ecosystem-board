@@ -34,6 +34,14 @@ export function formatUsd(n: number): string {
   return usdFull.format(n);
 }
 
+const usdPrecise = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+/** $715.02, for prices */
+export function formatUsdPrecise(n: number): string {
+  if (!Number.isFinite(n)) return "$0.00";
+  return usdPrecise.format(n);
+}
+
 /** +$1.2M, -$340k, $0 */
 export function formatSignedUsd(n: number): string {
   if (!Number.isFinite(n) || n === 0) return "$0";

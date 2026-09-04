@@ -6,6 +6,7 @@ import { buildIndex, buildPayload } from "../pipeline/metrics";
 import { listSnapshots } from "../pipeline/snapshots";
 import { loadState } from "../pipeline/state";
 import { AgentStore } from "../pipeline/store";
+import { readSources } from "../pipeline/sources";
 import type { BoardPayload } from "../pipeline/types";
 
 const OUT = join(import.meta.dir, "..", "public", "data");
@@ -25,6 +26,8 @@ export function buildChain(slug: string, asOf = new Date().toISOString()): Board
     today: todayUtc(),
   });
   store.close();
+  const sources = readSources(slug);
+  if (sources) payload.sources = sources;
   mkdirSync(OUT, { recursive: true });
   writeFileSync(join(OUT, `${slug}.json`), `${JSON.stringify(payload, null, 2)}\n`);
   log(`${cfg.name}: payload written (${payload.totals.agents} agents, ${payload.totals.uniqueOwners} owners, ${payload.totals.totalAssetsUsd} USD, ${snapshots.length} snapshot(s))`);

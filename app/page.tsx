@@ -2,7 +2,8 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { RelativeTime } from "@/components/RelativeTime";
-import { readIndex } from "@/lib/board";
+import { Hero } from "@/components/Hero";
+import { readBoard, readIndex } from "@/lib/board";
 import { formatCompact, formatInt, formatUsd, formatUsdCompact } from "@/lib/format";
 import styles from "./page.module.css";
 
@@ -11,20 +12,29 @@ export const dynamic = "force-static";
 export default async function OverviewPage() {
   const index = await readIndex();
   const chains = index?.chains ?? [];
+  const boards = await Promise.all(chains.map((c) => readBoard(c.slug)));
+  const sourceLine = (i: number): string | null => {
+    const src = boards[i]?.sources;
+    if (!src) return null;
+    return `Agents: ${src.agents.name}. Holdings: ${src.holdings.name}.`;
+  };
 
   return (
     <>
       <SiteHeader chains={chains.map((c) => ({ slug: c.slug, name: c.name, color: c.color }))} />
       <main className="wrap">
-        <section className={styles.intro}>
-          <h1>The agentic ecosystem, chain by chain</h1>
-          <p>
-            This board tracks ERC-8004 agents on every chain it is configured for: how many exist, the wallets that own
-            them, what those wallets hold, and which projects register the most agents. A pipeline refreshes the numbers
-            once a day from 8004scan and direct on-chain reads. The code, the chain configs and the project rules are
-            open source, and anyone can add a chain or improve attribution with a pull request.
-          </p>
-        </section>
+        <Hero>
+          <section className={styles.intro}>
+            <h1>The agentic ecosystem, chain by chain</h1>
+            <p>
+              This board tracks ERC-8004 agents on every chain it is configured for: how many exist, the wallets that own
+              them, what those wallets hold, and which projects register the most agents. A pipeline refreshes the numbers
+              once a day from public agent indexes and direct on-chain reads, and every number links to its source. The
+              code, the chain configs and the project rules are open source, and anyone can add a chain or improve
+              attribution with a pull request.
+            </p>
+          </section>
+        </Hero>
 
         <section className="card">
           {chains.length === 0 ? (
@@ -34,11 +44,14 @@ export default async function OverviewPage() {
               <div className={`${styles.row} ${styles.head}`} aria-hidden>
                 <span>Chain</span><span>Agents</span><span>Owner wallets</span><span>Total assets</span><span>Updated</span><span />
               </div>
-              {chains.map((c) => (
+              {chains.map((c, i) => (
                 <Link key={c.slug} href={`/${c.slug}`} className={styles.row}>
                   <span className={styles.chain}>
-                    <span className={styles.dot} style={{ background: c.color }} aria-hidden />
-                    {c.name}
+                    <span className={styles.chainName}>
+                      <span className={styles.dot} style={{ background: c.color }} aria-hidden />
+                      {c.name}
+                    </span>
+                    {sourceLine(i) ? <span className={styles.sources}>{sourceLine(i)}</span> : null}
                   </span>
                   <span>
                     <span className={styles.n} title={formatInt(c.agents)}>{formatCompact(c.agents)}</span>

@@ -4,6 +4,7 @@ import { syncAgentsFromGraph } from "../pipeline/graph";
 import { loadRules, topUnmapped } from "../pipeline/projects";
 import { gapCheck, syncAgents } from "../pipeline/scan";
 import { AgentStore } from "../pipeline/store";
+import { scanSource, subgraphSource, writeAgentSources } from "../pipeline/sources";
 
 /** Pages of 8004scan read after a subgraph sync: catches the last minutes and cross-checks the total. */
 const SCAN_CROSSCHECK_PAGES = 5;
@@ -44,6 +45,13 @@ export async function syncChain(slug: string, full: boolean): Promise<void> {
   if (gap.missing > 0 && gap.missing > res.total * 0.001) {
     log(useGraph ? `${cfg.name}: gap above 0.1% between the subgraph and 8004scan; the subgraph may be lagging` : `${cfg.name}: gap above 0.1%; rerun with --full to backfill`);
   }
+  const readAt = new Date().toISOString();
+  writeAgentSources(
+    slug,
+    useGraph
+      ? { agents: subgraphSource(cfg, store.count(), readAt), crossCheck: scanSource(cfg, res.total, readAt) }
+      : { agents: scanSource(cfg, res.total, readAt) },
+  );
   const unmapped = topUnmapped(store.all(), rules, 10);
   if (unmapped.length > 0) {
     log(`${cfg.name}: top names without a project rule:`);

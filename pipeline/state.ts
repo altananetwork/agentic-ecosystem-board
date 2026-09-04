@@ -71,8 +71,15 @@ export function updateState(prev: WalletStateFile | null, today: Balances, price
     const before = previous[owner];
     const moved = before ? Object.keys({ ...before.raw, ...rawStr }).some((k) => (before.raw[k] ?? "0") !== (rawStr[k] ?? "0")) : false;
     if (!first) {
-      netFlowUsd += usd - (before?.usd ?? 0);
-      if (moved) changedWallets++;
+      // Flow is the change in token amounts valued at today's prices, so a price move
+      // alone never shows up as money entering or leaving.
+      if (moved) {
+        for (const sym of Object.keys({ ...(before?.raw ?? {}), ...rawStr })) {
+          const delta = toAmount(cfg, sym, rawStr[sym] ?? "0") - toAmount(cfg, sym, before?.raw[sym] ?? "0");
+          netFlowUsd += delta * (prices[sym] ?? 0);
+        }
+        changedWallets++;
+      }
     }
     wallets[owner] = {
       raw: rawStr,

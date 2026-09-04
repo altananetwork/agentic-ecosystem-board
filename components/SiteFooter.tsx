@@ -11,7 +11,7 @@ export function SiteFooter() {
           Contributors: <a href="https://altana.network" target="_blank" rel="noreferrer">Altana</a>
         </span>
         <a href={REPO_URL} target="_blank" rel="noreferrer">Open source, MIT</a>
-        <span>Data: 8004scan and on-chain reads</span>
+        <span>Data: The Graph, 8004scan and on-chain reads</span>
         <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer">
           Add a chain or a project rule by pull request
         </a>

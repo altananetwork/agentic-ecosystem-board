@@ -112,6 +112,32 @@ export type BoardPayload = {
   history: { date: string; agents: number; totalAssetsUsd: number; walletsWithAssets: number; netFlowUsd: number }[];
   topProjects: { project: string; agents: number; share: number }[];
   methodology: string[];
+  /** Where each group of numbers comes from, shown on the board next to the metrics. */
+  sources?: BoardSources;
+};
+
+export type SourceRef = {
+  /** Human name, e.g. "The Graph, Agent0 subgraph" */
+  name: string;
+  /** Link a reader can open to see the same data */
+  url: string;
+  /** One line of detail: subgraph id, RPC host, ticker symbol */
+  detail?: string;
+  /** ISO timestamp of the read */
+  asOf: string;
+  /** Headline number from that source, when it has one (agent count, price) */
+  value?: number;
+};
+
+export type BoardSources = {
+  /** Primary agent index (subgraph when a key is configured, otherwise 8004scan) */
+  agents: SourceRef;
+  /** Independent count used as a cross-check, when different from the primary */
+  crossCheck?: SourceRef;
+  /** Balance reads on the chain itself */
+  holdings: SourceRef;
+  /** Native token price */
+  prices: SourceRef;
 };
 
 export type IndexPayload = {

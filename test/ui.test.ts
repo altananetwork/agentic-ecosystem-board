@@ -87,3 +87,48 @@ describe("lib/format", () => {
     expect(formatDayShort("2026-09-04")).toBe("4 Sep");
   });
 });
+
+describe("components", () => {
+  test("Sources renders one row per source with links and values", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const { Sources } = await import("../components/Sources");
+    const { createElement } = await import("react");
+    const board = await readBoard("bnb");
+    const html = renderToString(createElement(Sources, { sources: board!.sources }));
+    for (const label of ["Agents", "Cross-check", "Holdings", "Prices"]) expect(html).toContain(label);
+    expect(html).toContain('href="https://8004scan.io/agents?chain=56"');
+    expect(html).toContain("333,972 agents");
+    expect(html).toContain("$715.02");
+    expect(renderToString(createElement(Sources, { sources: undefined }))).toBe("");
+  });
+
+  test("StatTile shows a source footnote link when given one", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const { StatTile } = await import("../components/StatTile");
+    const { createElement } = await import("react");
+    const html = renderToString(createElement(StatTile, { label: "Total agents", value: "334K", source: { name: "The Graph", url: "https://thegraph.com" } }));
+    expect(html).toContain("Source:");
+    expect(html).toContain('href="https://thegraph.com"');
+    const plain = renderToString(createElement(StatTile, { label: "x", value: "1" }));
+    expect(plain).not.toContain("Source:");
+  });
+
+  test("ChainTabs marks the active chain and disables unpublished ones", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const { ChainTabs } = await import("../components/ChainTabs");
+    const { createElement } = await import("react");
+    const html = renderToString(
+      createElement(ChainTabs, {
+        active: "bnb",
+        chains: [
+          { slug: "bnb", name: "BNB Chain", color: "#f0b90b", published: true },
+          { slug: "base", name: "BASE", color: "#0052ff", published: false },
+        ],
+      }),
+    );
+    expect(html).toContain('aria-current="page"');
+    expect(html).toContain('href="/bnb"');
+    expect(html).not.toContain('href="/base"');
+    expect(html).toContain('title="No data yet"');
+  });
+});

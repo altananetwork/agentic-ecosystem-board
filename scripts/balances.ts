@@ -6,6 +6,7 @@ import { nativePriceUsd } from "../pipeline/prices";
 import { writeSnapshot } from "../pipeline/snapshots";
 import { loadState, pricesFor, saveState, updateState } from "../pipeline/state";
 import { AgentStore } from "../pipeline/store";
+import { holdingsSource, priceSource, writeHoldingSources } from "../pipeline/sources";
 
 export async function balancesChain(slug: string): Promise<void> {
   const cfg = loadChain(slug);
@@ -36,6 +37,8 @@ export async function balancesChain(slug: string): Promise<void> {
     return;
   }
   saveState(update.next);
+  const readAt = new Date().toISOString();
+  writeHoldingSources(slug, { holdings: holdingsSource(cfg, rpcs[0] ?? "", owners.length, readAt), prices: priceSource(cfg, price, readAt) });
   const snap = buildSnapshot({ date, agents, uniqueOwners: store.uniqueOwners(), update, nativePriceUsd: price, registrations: store.registrationsOn(date) });
   const p = writeSnapshot(slug, snap);
   log(`${cfg.name}: snapshot written to ${p}`);

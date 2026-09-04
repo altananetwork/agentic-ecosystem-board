@@ -1,8 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["esnext"],
-    "types": ["bun-types"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "types": [
+      "bun-types"
+    ],
     "strict": true,
     "noEmit": true,
     "module": "esnext",
@@ -11,7 +16,17 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": { "@/*": ["./*"] }
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "jsx": "react-jsx"
   },
-  "include": ["pipeline/**/*.ts", "scripts/**/*.ts", "test/**/*.ts"]
+  "include": [
+    "pipeline/**/*.ts",
+    "scripts/**/*.ts",
+    "test/**/*.ts",
+    "types/**/*.d.ts"
+  ]
 }

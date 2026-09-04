@@ -1,0 +1,27 @@
+.field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  /* Quiet zone on the left for type; the wash lives on the right. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 62%, rgba(0, 0, 0, 0.6) 78%, #000 92%);
+  mask-image: linear-gradient(to right, transparent 0%, transparent 62%, rgba(0, 0, 0, 0.6) 78%, #000 92%);
+}
+.canvas { display: block; width: 100%; height: 100%; }
+.still {
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 190%;
+  width: auto;
+  max-width: none;
+  opacity: 0.22;
+}
+@media (max-width: 720px) {
+  .field {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 60%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 60%, #000 100%);
+  }
+}

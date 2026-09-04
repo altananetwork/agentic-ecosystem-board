@@ -1,4 +1,7 @@
-.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 32px 0 20px; }
+.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 0 0 16px; }
+.tabs { margin-top: 4px; }
+.sources { display: grid; gap: 8px; margin-bottom: 16px; }
+.volumeNote { color: var(--text-secondary); font-size: 13px; margin: 0; }
 .top h1 { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
 .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
 .meta { color: var(--text-secondary); font-size: 13px; margin-top: 6px; }

@@ -60,7 +60,7 @@ export function methodology(cfg: ChainConfig): string[] {
     "Owner wallets are the current holders of those agent NFTs. One wallet can own many agents. Burn addresses are excluded, so agents sent there count as agents but not as owners.",
     `Holdings are the ${tokens} balances of every owner wallet, read directly from the chain through Multicall3 at build time and priced in USD with the ${cfg.native.symbol} spot price from Binance.`,
     "Active wallets are owner wallets whose balances moved at least once inside the 30-day window, measured from one daily snapshot to the next.",
-    "Net flow is the sum of all owner wallet balance changes in USD over the window. It is not gross transfer volume, which this board does not track.",
+    "Net flow is the change in token amounts held by wallets present in consecutive snapshots, valued at that day's prices. Price moves and wallets joining or leaving the owner set do not count. It is not transfer volume, which this board does not track.",
     "Top projects group agents by the name they registered with, or by the host of their metadata URI, using the community-maintained rules file in the repository.",
     "Every number on this page is rebuilt daily by a public pipeline and committed to the repository, so the full history is reproducible.",
   ];

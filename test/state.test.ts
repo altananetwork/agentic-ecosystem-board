@@ -48,8 +48,8 @@ describe("state", () => {
       ["0xb", { BNB: 0n, USDT: 20n * E18, USDC: 0n }], // -30
       ["0xc", { BNB: 0n, USDT: 0n, USDC: 10n * E18 }], // new +10
     ]), prices, CFG, "2026-09-05");
-    expect(d2.netFlowUsd).toBe(-20);
-    expect(d2.changedWallets).toBe(1); // only 0xb moved; a wallet seen for the first time is not a move
+    expect(d2.netFlowUsd).toBe(-30); // only 0xb moved; a wallet joining the set brings no flow
+    expect(d2.changedWallets).toBe(1);
     expect(d2.next.wallets["0xa"].lastChanged).toBeNull(); // never observed moving
     expect(d2.next.wallets["0xb"].lastChanged).toBe("2026-09-05");
     expect(d2.next.wallets["0xc"].firstSeen).toBe("2026-09-05");
@@ -58,10 +58,11 @@ describe("state", () => {
     expect(d2.totalAssetsUsd).toBe(530);
   });
 
-  test("a price move alone changes usd and flow but not lastChanged", () => {
+  test("a price move alone changes usd but not flow or lastChanged", () => {
     const d1 = updateState(null, bal([["0xa", { BNB: 1n * E18, USDT: 0n, USDC: 0n }]]), prices, CFG, "2026-09-04");
     const d2 = updateState(d1.next, bal([["0xa", { BNB: 1n * E18, USDT: 0n, USDC: 0n }]]), pricesFor(CFG, 600), CFG, "2026-09-05");
-    expect(d2.netFlowUsd).toBe(100);
+    expect(d2.netFlowUsd).toBe(0);
+    expect(d2.next.wallets["0xa"].usd).toBe(600);
     expect(d2.changedWallets).toBe(0);
     expect(d2.next.wallets["0xa"].lastChanged).toBeNull();
   });
