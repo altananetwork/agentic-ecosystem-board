@@ -79,6 +79,11 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
   const tokenList = tokens.join(", ");
   // Activity needs two snapshots to compare; the first day has nothing to measure yet.
   const pending = activity.daysCovered < 2;
+  // Name the window the cards actually cover. It only says "30 days" once 30 snapshots exist.
+  const days = Math.min(activity.daysCovered, activity.windowDays);
+  const full = days >= activity.windowDays;
+  const windowLabel = full ? "30 days" : `${days} ${days === 1 ? "day" : "days"}`;
+  const windowNote = full ? `Last 30 days, since ${activity.since}` : `Since ${activity.since}. The window grows one day per run until it covers 30 days.`;
   const name = board.chain.name;
   const asOf = board.asOf;
 
@@ -108,7 +113,7 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
         </Hero>
 
         <section className={`card ${styles.block}`}>
-          <DashboardNotes chainName={name} tokens={tokens} agentsSource={board.sources?.agents.name} crossCheck={board.sources?.crossCheck?.name} />
+          <DashboardNotes chainName={name} tokens={tokens} agentsSource={board.sources?.agents.name} crossCheck={board.sources?.crossCheck?.name} windowLabel={windowLabel} since={activity.since} />
         </section>
 
         <section className={styles.grid}>
@@ -118,13 +123,13 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
           <KpiCard title="Total assets (USD)" description={tokens.join(" + ")} value={formatUsd(totals.totalAssetsUsd)} chainName={name} asOf={asOf} />
           {pending ? (
             <>
-              <KpiCard title="30D total volume (USD)" description="Measured from the second daily run onwards" value="Pending" chainName={name} asOf={asOf} />
-              <KpiCard title="Active agent wallets, 30D" description="Measured from the second daily run onwards" value="Pending" chainName={name} asOf={asOf} />
+              <KpiCard title="Total volume (USD)" description="Measured from the second daily run onwards, growing to a 30-day window" value="Pending" chainName={name} asOf={asOf} />
+              <KpiCard title="Active agent wallets" description="Measured from the second daily run onwards, growing to a 30-day window" value="Pending" chainName={name} asOf={asOf} />
             </>
           ) : (
             <>
-              <KpiCard title="30D total volume (USD)" description="Gross balance movement across agent wallets, last 30 days" value={formatUsd(activity.volumeUsd)} chainName={name} asOf={asOf} />
-              <KpiCard title="Active agent wallets, 30D" description="Wallets whose balances moved in the last 30 days" value={formatInt(activity.activeWallets)} chainName={name} asOf={asOf} />
+              <KpiCard title={`Total volume, last ${windowLabel} (USD)`} description={`Gross balance movement across agent wallets. ${windowNote}`} value={formatUsd(activity.volumeUsd)} chainName={name} asOf={asOf} />
+              <KpiCard title={`Active agent wallets, last ${windowLabel}`} description={`Wallets whose balances moved. ${windowNote}`} value={formatInt(activity.activeWallets)} chainName={name} asOf={asOf} />
             </>
           )}
         </section>
