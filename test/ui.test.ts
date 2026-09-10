@@ -123,7 +123,7 @@ describe("components", () => {
     const { DashboardNotes } = await import("../components/DashboardNotes");
     const { createElement } = await import("react");
     const html = renderToString(createElement(DashboardNotes, { chainName: "BNB Chain", tokens: ["BNB", "USDT", "USDC"], agentsSource: "The Graph, Agent0 subgraph", crossCheck: "8004scan" }));
-    for (const t of ["Total agents:", "Unique wallets:", "Wallets with assets:", "Total assets:", "30D total volume:", "Active agent wallets, 30D:", "Top projects:"]) expect(html).toContain(t);
+    for (const t of ["Total agents:", "Unique wallets:", "Wallets with assets:", "Total assets:", "Total volume:", "Active agent wallets:", "Top projects:"]) expect(html).toContain(t);
     expect(html).toContain("cross-checked against 8004scan");
     expect(html).toContain("BNB, USDT, USDC");
     expect(html).not.toContain("\u2014");
