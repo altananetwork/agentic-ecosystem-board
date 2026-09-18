@@ -4,12 +4,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { KpiCard } from "@/components/KpiCard";
 import { Donut } from "@/components/Donut";
-import { DashboardNotes } from "@/components/DashboardNotes";
 import { Hero } from "@/components/Hero";
-import { ChainTabs, type ChainTab } from "@/components/ChainTabs";
-import { configuredSlugs, knownSlugs, readBoard, readIndex } from "@/lib/board";
+import { chainLinks, chainLogo, knownSlugs, readBoard, readIndex } from "@/lib/board";
+import { ChainMark } from "@/components/ChainMark";
 import { SITE_NAME } from "@/lib/site";
-import { formatInt, formatUsd, formatUsdCompact, formatUtc } from "@/lib/format";
+import { formatDayShort, formatInt, formatUsd, formatUsdCompact, formatUtc } from "@/lib/format";
 import styles from "./page.module.css";
 
 export const dynamic = "force-static";
@@ -34,21 +33,17 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-/** Published chains first, then configured chains that have no payload yet (disabled). */
-async function chainTabs(index: Awaited<ReturnType<typeof readIndex>>): Promise<ChainTab[]> {
-  const published: ChainTab[] = (index?.chains ?? []).map((c) => ({ slug: c.slug, name: c.name, color: c.color, published: true }));
-  const seen = new Set(published.map((c) => c.slug));
-  const pending: ChainTab[] = (await configuredSlugs())
-    .filter((slug) => !seen.has(slug))
-    .map((slug) => ({ slug, name: slug.toUpperCase(), color: "var(--text-tertiary)", published: false }));
-  return [...published, ...pending];
+/** "BNB, USDT or USDC" for membership, "BNB, USDT, USDC" for a plain list. */
+function orList(tokens: string[]): string {
+  if (tokens.length < 2) return tokens.join("");
+  return `${tokens.slice(0, -1).join(", ")} or ${tokens[tokens.length - 1]}`;
 }
 
 export default async function ChainBoardPage({ params }: { params: Promise<Params> }) {
   const { chain } = await params;
   const [index, board] = await Promise.all([readIndex(), readBoard(chain)]);
-  const chains = (index?.chains ?? []).map((c) => ({ slug: c.slug, name: c.name, color: c.color }));
-  const tabs = await chainTabs(index);
+  const chains = await chainLinks(index);
+  const logo = await chainLogo(chain);
 
   if (!board) {
     const slugs = await knownSlugs();
@@ -60,9 +55,6 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
           <Hero>
             <div className={styles.top}>
               <h1>{chain.toUpperCase()}</h1>
-            </div>
-            <div className={styles.tabs}>
-              <ChainTabs chains={tabs} active={chain} />
             </div>
           </Hero>
           <section className={`card ${styles.notice}`}>
@@ -77,15 +69,17 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
   const { totals, activity } = board;
   const tokens = totals.byToken.map((t) => t.symbol);
   const tokenList = tokens.join(", ");
+  const tokenOr = orList(tokens);
+
   // Activity needs two snapshots to compare; the first day has nothing to measure yet.
   const pending = activity.daysCovered < 2;
   // Name the window the cards actually cover. It only says "30 days" once 30 snapshots exist.
   const days = Math.min(activity.daysCovered, activity.windowDays);
   const full = days >= activity.windowDays;
   const windowLabel = full ? "30 days" : `${days} ${days === 1 ? "day" : "days"}`;
-  const windowNote = full ? `Last 30 days, since ${activity.since}` : `Since ${activity.since}. The window grows one day per run until it covers 30 days.`;
+  const windowNote = full ? "" : ` Window started ${formatDayShort(activity.since)} and grows to ${activity.windowDays} days.`;
+
   const name = board.chain.name;
-  const asOf = board.asOf;
 
   return (
     <>
@@ -95,11 +89,11 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
           <div className={styles.top}>
             <div>
               <h1>
-                <span className={styles.dot} style={{ background: board.chain.color }} aria-hidden />
+                <ChainMark name={name} color={board.chain.color} logo={logo} size={28} />
                 {name}
               </h1>
               <div className={styles.meta}>
-                Data as of {formatUtc(asOf)}
+                Data as of {formatUtc(board.asOf)}
                 <span className={styles.links}>
                   <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
                   <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
@@ -107,45 +101,44 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
               </div>
             </div>
           </div>
-          <div className={styles.tabs}>
-            <ChainTabs chains={tabs} active={chain} />
-          </div>
         </Hero>
 
-        <section className={`card ${styles.block}`}>
-          <DashboardNotes chainName={name} tokens={tokens} agentsSource={board.sources?.agents.name} crossCheck={board.sources?.crossCheck?.name} windowLabel={windowLabel} since={activity.since} />
-        </section>
-
-        <section className={styles.grid}>
-          <KpiCard title="Total agents" description="Registered ERC-8004 agents" value={formatInt(totals.agents)} chainName={name} asOf={asOf} />
-          <KpiCard title="Unique wallets" description="Distinct owner wallets across registered agents" value={formatInt(totals.uniqueOwners)} chainName={name} asOf={asOf} />
-          <KpiCard title="Wallets with assets" description={`Wallets holding ${tokenList}`} value={formatInt(totals.walletsWithAssets)} chainName={name} asOf={asOf} />
-          <KpiCard title="Total assets (USD)" description={tokens.join(" + ")} value={formatUsd(totals.totalAssetsUsd)} chainName={name} asOf={asOf} />
+        <section className={styles.grid3}>
+          <KpiCard id="agents" title="Total agents" definition="Registered ERC-8004 agents." value={formatInt(totals.agents)} />
+          <KpiCard id="owners" title="Unique wallets" definition="Distinct owner wallets across registered agents." value={formatInt(totals.uniqueOwners)} />
+          <KpiCard id="funded" title="Wallets with assets" definition={`Wallets holding ${tokenOr}.`} value={formatInt(totals.walletsWithAssets)} />
+          <KpiCard id="assets" title="Total assets (USD)" definition={`Current value held in ${tokenList}.`} value={formatUsd(totals.totalAssetsUsd)} />
           {pending ? (
             <>
-              <KpiCard title="Total volume (USD)" description="Measured from the second daily run onwards, growing to a 30-day window" value="Pending" chainName={name} asOf={asOf} />
-              <KpiCard title="Active agent wallets" description="Measured from the second daily run onwards, growing to a 30-day window" value="Pending" chainName={name} asOf={asOf} />
+              <KpiCard id="volume" title="Total volume (USD)" definition={`Gross movement of ${tokenList} balances across agent wallets, measured between daily snapshots. Needs two snapshots. Available after the next run.`} value="Pending" />
+              <KpiCard id="active" title="Active agent wallets" definition={`Wallets whose ${tokenOr} balances moved between daily snapshots. Needs two snapshots. Available after the next run.`} value="Pending" />
             </>
           ) : (
             <>
-              <KpiCard title={`Total volume, last ${windowLabel} (USD)`} description={`Gross balance movement across agent wallets. ${windowNote}`} value={formatUsd(activity.volumeUsd)} chainName={name} asOf={asOf} />
-              <KpiCard title={`Active agent wallets, last ${windowLabel}`} description={`Wallets whose balances moved. ${windowNote}`} value={formatInt(activity.activeWallets)} chainName={name} asOf={asOf} />
+              <KpiCard
+                id="volume"
+                title={`Total volume, last ${windowLabel} (USD)`}
+                definition={`Gross movement of ${tokenList} balances across agent wallets, measured between daily snapshots. Lower bound: moves that net out within a day are not counted.${windowNote}`}
+                value={formatUsd(activity.volumeUsd)}
+              />
+              <KpiCard
+                id="active"
+                title={`Active agent wallets, last ${windowLabel}`}
+                definition={`Wallets whose ${tokenOr} balances moved.${windowNote}`}
+                value={formatInt(activity.activeWallets)}
+              />
             </>
           )}
         </section>
 
-        <section className={styles.grid}>
-          <div className={`card ${styles.panel}`}>
-            <div className={styles.panelHead}>
-              <div className={styles.panelTitle}>Top projects by agent count</div>
-              <div className={styles.panelDesc}>Named projects by registered ERC-8004 agents</div>
-            </div>
-            <Donut projects={board.topProjects} label={`Top projects on ${name} by agent count`} />
+        <section className={`card ${styles.panel}`}>
+          <div className={styles.panelHead}>
+            <div className={styles.panelTitle}>Top projects by agent count</div>
+            <div className={styles.panelDesc}>Named projects ranked by registered agents. Agents without a recognised project are grouped as Other.</div>
           </div>
-          <div className={`card ${styles.panel}`}>
-            <div className={styles.panelHead}>
-              <div className={styles.panelTitle}>Top projects</div>
-              <div className={styles.panelDesc}>Named projects ranked by registered agent count</div>
+          <div className={styles.split}>
+            <div className={styles.donut}>
+              <Donut projects={board.topProjects} label={`Top projects on ${name} by agent count`} />
             </div>
             <table className={styles.table}>
               <thead>

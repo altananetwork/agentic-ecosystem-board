@@ -12,7 +12,7 @@ const interTight = Inter_Tight({
 });
 
 const description =
-  "Open, daily-refreshed data on ERC-8004 agents per chain: how many agents exist, who owns them, what their wallets hold, activity over the last 30 days and the top projects. Open source, anyone can contribute.";
+  "Daily counts of ERC-8004 agents, their owner wallets and what those wallets hold, per chain. Open source, anyone can contribute.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

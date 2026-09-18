@@ -7,7 +7,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-lg);
-  padding: 18px 0;
+  padding-top: 18px;
+  padding-bottom: 18px;
 }
 .brand { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .title {

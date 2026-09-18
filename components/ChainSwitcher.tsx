@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { ChainMark } from "./ChainMark";
 import styles from "./ChainSwitcher.module.css";
 
-export type ChainLink = { slug: string; name: string; color: string };
+export type ChainLink = { slug: string; name: string; color: string; logo?: string };
 
 export function ChainSwitcher({ chains, active }: { chains: ChainLink[]; active?: string }) {
   if (chains.length === 0) return null;
@@ -15,7 +16,7 @@ export function ChainSwitcher({ chains, active }: { chains: ChainLink[]; active?
           className={`${styles.link} ${active === c.slug ? styles.active : ""}`}
           aria-current={active === c.slug ? "page" : undefined}
         >
-          <span className={styles.dot} style={{ background: c.color }} aria-hidden />
+          <ChainMark name={c.name} color={c.color} logo={c.logo} size={14} />
           {c.name}
         </Link>
       ))}
