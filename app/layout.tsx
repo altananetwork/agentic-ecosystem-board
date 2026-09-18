@@ -12,7 +12,7 @@ const interTight = Inter_Tight({
 });
 
 const description =
-  "Open, daily-refreshed data on ERC-8004 agents per chain: how many agents exist, who owns them, what their wallets hold, activity over the last 30 days and the top projects. Open source, anyone can contribute.";
+  "Daily counts of ERC-8004 agents, their owner wallets and what those wallets hold, per chain. Open source, anyone can contribute.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,7 +35,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={interTight.variable}>
+    <html lang="en" className={interTight.variable} suppressHydrationWarning>
+      <head>
+        {/* Apply a stored theme before first paint so there is no flash. "system" stores nothing. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}`,
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

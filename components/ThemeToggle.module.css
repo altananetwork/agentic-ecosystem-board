@@ -1,0 +1,23 @@
+.group {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-overlay);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-tertiary);
+}
+.btn:hover { color: var(--text-primary); }
+.btn:focus-visible { outline: 2px solid var(--accent-border); outline-offset: 1px; }
+.active { background: var(--bg-inset); color: var(--text-primary); }
