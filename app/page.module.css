@@ -5,7 +5,7 @@
 .rows { display: grid; }
 .row {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr 72px;
   align-items: center;
   gap: 16px;
   padding: 16px 20px;
@@ -19,11 +19,18 @@
 .chainName { display: flex; align-items: center; gap: 10px; font-weight: 500; }
 .n { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .updated { color: var(--text-secondary); font-size: 12.5px; }
-.open { color: var(--accent); font-weight: 500; white-space: nowrap; }
+.num { text-align: right; }
+.open { color: var(--accent); font-weight: 500; white-space: nowrap; text-align: right; }
+.next { color: var(--text-tertiary); }
+.next .chainName { font-weight: 400; }
+.next:hover { background: var(--bg-surface); }
+.ring { width: 18px; height: 18px; border-radius: 50%; border: 1.5px dashed var(--border-active); flex: none; }
 .empty { padding: 36px 20px; color: var(--text-secondary); text-align: center; }
 @media (max-width: 720px) {
   .grid { grid-template-columns: 1fr; }
   .row { grid-template-columns: 1fr 1fr; }
   .head { display: none; }
+  .num { text-align: left; }
   .updated { grid-column: 1 / -1; }
+  .open { text-align: left; }
 }

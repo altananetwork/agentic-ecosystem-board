@@ -6,7 +6,17 @@
   font-size: 13px;
 }
 .inner { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; }
-.credit { display: inline-flex; align-items: center; gap: 8px; color: var(--text-primary); }
-.credit img { width: 16px; height: 16px; display: block; }
-.credit a { color: var(--text-primary); }
-.credit a:hover { color: var(--accent); }
+.credit { display: inline-flex; align-items: center; gap: 10px; color: var(--text-secondary); }
+.logo { display: inline-flex; align-items: center; }
+.logo img { height: 18px; width: auto; }
+.logo:hover { opacity: 0.8; }
+
+/* Same rules as the tokens in globals.css: system dark unless light is chosen, or dark chosen. */
+.logo .onLight { display: block; }
+.logo .onDark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :global(:root:not([data-theme="light"])) .logo .onLight { display: none; }
+  :global(:root:not([data-theme="light"])) .logo .onDark { display: block; }
+}
+:global(:root[data-theme="dark"]) .logo .onLight { display: none; }
+:global(:root[data-theme="dark"]) .logo .onDark { display: block; }

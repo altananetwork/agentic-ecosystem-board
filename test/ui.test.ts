@@ -8,6 +8,7 @@ import { configuredSlugs, knownSlugs, readBoard, readIndex } from "../lib/board"
 import {
   formatAmount,
   formatCompact,
+  formatDate,
   formatDayShort,
   formatInt,
   formatPercent,
@@ -72,6 +73,11 @@ describe("lib/format", () => {
     expect(formatPercent(0.2147)).toBe("21.5%");
     expect(formatAmount(3412.5, "BNB")).toBe("3,413 BNB");
     expect(formatAmount(0.12345, "BNB")).toBe("0.1235 BNB");
+  });
+
+  test("date only, no time or zone", () => {
+    expect(formatDate("2026-09-18T09:03:35.182Z")).toBe("18 Sep 2026");
+    expect(formatDate("nope")).toBe("unknown");
   });
 
   test("relative time is deterministic with an injected now", () => {

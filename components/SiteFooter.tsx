@@ -7,9 +7,14 @@ export function SiteFooter() {
     <footer className={styles.footer}>
       <div className={`wrap ${styles.inner}`}>
         <span className={styles.credit}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/contributors/altana.svg" alt="" width={16} height={16} />
-          Contributors: <a href="https://altana.network" target="_blank" rel="noreferrer">Altana</a>
+          Contributors
+          <a href="https://altana.network" target="_blank" rel="noreferrer" className={styles.logo} aria-label="Altana">
+            {/* Lockup for light grounds; the white one takes over in dark mode. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/contributors/altana-logo-dark.svg" alt="Altana" height={18} className={styles.onLight} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/contributors/altana-logo-white.svg" alt="Altana" height={18} className={styles.onDark} />
+          </a>
         </span>
         <Link href="/methodology">How this is measured</Link>
         <a href={REPO_URL} target="_blank" rel="noreferrer">Open source, MIT</a>

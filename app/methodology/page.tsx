@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { chainLinks, chainLogo, readBoard, readIndex } from "@/lib/board";
 import { ChainMark } from "@/components/ChainMark";
 import { REPO_URL } from "@/lib/site";
-import { formatUtc } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 import styles from "./page.module.css";
 
 export const dynamic = "force-static";
@@ -77,7 +77,7 @@ export default async function MethodologyPage() {
               <dt>Registry</dt>
               <dd><a href={`${b.chain.explorerUrl}/address/${b.chain.registry}`} target="_blank" rel="noreferrer">{b.chain.registry}</a></dd>
               <dt>Last run</dt>
-              <dd>{formatUtc(b.asOf)}</dd>
+              <dd>{formatDate(b.asOf)}</dd>
             </dl>
           </section>
         ))}

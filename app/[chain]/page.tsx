@@ -8,7 +8,7 @@ import { Hero } from "@/components/Hero";
 import { chainLinks, chainLogo, knownSlugs, readBoard, readIndex } from "@/lib/board";
 import { ChainMark } from "@/components/ChainMark";
 import { SITE_NAME } from "@/lib/site";
-import { formatDayShort, formatInt, formatUsd, formatUsdCompact, formatUtc } from "@/lib/format";
+import { formatDate, formatDayShort, formatInt, formatUsd, formatUsdCompact } from "@/lib/format";
 import styles from "./page.module.css";
 
 export const dynamic = "force-static";
@@ -93,7 +93,7 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
                 {name}
               </h1>
               <div className={styles.meta}>
-                Data as of {formatUtc(board.asOf)}
+                Data as of {formatDate(board.asOf)}
                 <span className={styles.links}>
                   <a href={board.chain.scanUrl} target="_blank" rel="noreferrer">Agents on 8004scan</a>
                   <a href={`${board.chain.explorerUrl}/address/${board.chain.registry}`} target="_blank" rel="noreferrer">Identity registry</a>
@@ -137,13 +137,10 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
             <div className={styles.panelDesc}>Named projects ranked by registered agents. Agents without a recognised project are grouped as Other.</div>
           </div>
           <div className={styles.split}>
-            <div className={styles.donut}>
-              <Donut projects={board.topProjects} label={`Top projects on ${name} by agent count`} />
-            </div>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Rank</th>
+                  <th className={styles.rank}>Rank</th>
                   <th>Project</th>
                   <th className={styles.num}>Agents</th>
                 </tr>
@@ -153,13 +150,16 @@ export default async function ChainBoardPage({ params }: { params: Promise<Param
                   .filter((p) => p.project !== "Other")
                   .map((p, i) => (
                     <tr key={p.project}>
-                      <td>{i + 1}</td>
+                      <td className={styles.rank}>{i + 1}</td>
                       <td>{p.project}</td>
                       <td className={styles.num}>{formatInt(p.agents)}</td>
                     </tr>
                   ))}
               </tbody>
             </table>
+            <div className={styles.donut}>
+              <Donut projects={board.topProjects} label={`Top projects on ${name} by agent count`} />
+            </div>
           </div>
         </section>
       </main>

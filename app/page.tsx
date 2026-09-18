@@ -5,6 +5,7 @@ import { RelativeTime } from "@/components/RelativeTime";
 import { Hero } from "@/components/Hero";
 import { KpiCard } from "@/components/KpiCard";
 import { chainLinks, readIndex } from "@/lib/board";
+import { REPO_URL } from "@/lib/site";
 import { ChainMark } from "@/components/ChainMark";
 import { formatCompact, formatInt, formatUsd, formatUsdCompact } from "@/lib/format";
 import styles from "./page.module.css";
@@ -48,7 +49,7 @@ export default async function OverviewPage() {
             <section className="card">
               <div className={styles.rows}>
                 <div className={`${styles.row} ${styles.head}`} aria-hidden>
-                  <span>Chain</span><span>Agents</span><span>Unique wallets</span><span>Total assets</span><span>Updated</span><span />
+                  <span>Chain</span><span className={styles.num}>Agents</span><span className={styles.num}>Unique wallets</span><span className={styles.num}>Total assets</span><span className={styles.num}>Updated</span><span />
                 </div>
                 {links.map((c, i) => (
                   <Link key={c.slug} href={`/${c.slug}`} className={styles.row}>
@@ -56,13 +57,24 @@ export default async function OverviewPage() {
                       <ChainMark name={c.name} color={c.color} logo={c.logo} size={18} />
                       {c.name}
                     </span>
-                    <span className={styles.n} title={formatInt(chains[i].agents)}>{formatCompact(chains[i].agents)}</span>
-                    <span className={styles.n} title={formatInt(chains[i].uniqueOwners)}>{formatCompact(chains[i].uniqueOwners)}</span>
-                    <span className={styles.n} title={formatUsd(chains[i].totalAssetsUsd)}>{formatUsdCompact(chains[i].totalAssetsUsd)}</span>
-                    <span className={styles.updated}><RelativeTime iso={chains[i].asOf} /></span>
+                    <span className={`${styles.n} ${styles.num}`} title={formatInt(chains[i].agents)}>{formatCompact(chains[i].agents)}</span>
+                    <span className={`${styles.n} ${styles.num}`} title={formatInt(chains[i].uniqueOwners)}>{formatCompact(chains[i].uniqueOwners)}</span>
+                    <span className={`${styles.n} ${styles.num}`} title={formatUsd(chains[i].totalAssetsUsd)}>{formatUsdCompact(chains[i].totalAssetsUsd)}</span>
+                    <span className={`${styles.updated} ${styles.num}`}><RelativeTime iso={chains[i].asOf} /></span>
                     <span className={styles.open}>Open</span>
                   </Link>
                 ))}
+                <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer" className={`${styles.row} ${styles.next}`}>
+                  <span className={styles.chainName}>
+                    <span className={styles.ring} aria-hidden />
+                    More chains to come
+                  </span>
+                  <span className={styles.num}>&middot;</span>
+                  <span className={styles.num}>&middot;</span>
+                  <span className={styles.num}>&middot;</span>
+                  <span className={styles.num} />
+                  <span className={styles.open}>Add a chain</span>
+                </a>
               </div>
             </section>
           </>
