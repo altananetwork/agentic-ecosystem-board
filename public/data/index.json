@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-21T10:00:55.742Z",
+  "generatedAt": "2026-09-22T09:23:51.118Z",
   "chains": [
     {
       "slug": "bnb",
@@ -8,10 +8,10 @@
       "shortName": "BNB",
       "chainId": 56,
       "color": "#f0b90b",
-      "asOf": "2026-09-21T10:00:55.742Z",
-      "agents": 355494,
-      "uniqueOwners": 285743,
-      "totalAssetsUsd": 10132191.58
+      "asOf": "2026-09-22T09:23:51.118Z",
+      "agents": 355924,
+      "uniqueOwners": 286110,
+      "totalAssetsUsd": 10145808.58
     }
   ]
 }
