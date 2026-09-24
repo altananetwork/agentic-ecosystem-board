@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-24",
+  "agents": 356935,
+  "uniqueOwners": 286972,
+  "walletsWithAssets": 224933,
+  "totalAssetsUsd": 9867695.27,
+  "byToken": [
+    {
+      "symbol": "BNB",
+      "amount": 7073.434366,
+      "usd": 5427233.99
+    },
+    {
+      "symbol": "USDT",
+      "amount": 4283920.541275,
+      "usd": 4283920.54
+    },
+    {
+      "symbol": "USDC",
+      "amount": 156540.741563,
+      "usd": 156540.74
+    }
+  ],
+  "nativePriceUsd": 767.27,
+  "netFlowUsd": -195889.18,
+  "changedWallets": 31416,
+  "grossFlowUsd": 1824073.11,
+  "registrations": 218
+}
