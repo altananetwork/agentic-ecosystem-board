@@ -1,0 +1,36 @@
+.wrap { position: relative; display: inline-flex; align-items: center; }
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-tertiary);
+}
+.trigger:hover, .trigger:focus-visible { color: var(--text-primary); background: var(--bg-surface); outline: none; }
+.tip {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: 260px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-overlay);
+  box-shadow: 0 6px 20px oklch(0 0 0 / 0.08);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms ease;
+}
+.wrap:hover .tip, .wrap:focus-within .tip { opacity: 1; visibility: visible; }
