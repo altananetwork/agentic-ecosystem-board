@@ -10,44 +10,40 @@
     "scanUrl": "https://8004scan.io/agents?chain=56",
     "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
   },
-  "asOf": "2026-11-06T12:11:41.938Z",
+  "asOf": "2026-11-07T11:08:06.661Z",
   "totals": {
-    "agents": 407805,
-    "uniqueOwners": 325570,
-    "walletsWithAssets": 248913,
-    "totalAssetsUsd": 8242332.17,
+    "agents": 409155,
+    "uniqueOwners": 326638,
+    "walletsWithAssets": 249715,
+    "totalAssetsUsd": 8227311.83,
     "byToken": [
       {
         "symbol": "BNB",
-        "amount": 6610.986025,
-        "usd": 4603692.34
+        "amount": 6649.297953,
+        "usd": 4615410.7
       },
       {
         "symbol": "USDT",
-        "amount": 3461483.417106,
-        "usd": 3461483.42
+        "amount": 3447768.246559,
+        "usd": 3447768.25
       },
       {
         "symbol": "USDC",
-        "amount": 177156.412934,
-        "usd": 177156.41
+        "amount": 164132.887676,
+        "usd": 164132.89
       }
     ],
-    "nativePriceUsd": 696.37
+    "nativePriceUsd": 694.12
   },
   "activity": {
     "windowDays": 30,
-    "since": "2026-10-08",
+    "since": "2026-10-09",
     "daysCovered": 30,
-    "activeWallets": 96900,
-    "netFlowUsd": -3436533.89,
-    "volumeUsd": 43753214.56
+    "activeWallets": 96450,
+    "netFlowUsd": -2685036.59,
+    "volumeUsd": 42422755.65
   },
   "registrationsDaily": [
-    {
-      "date": "2026-10-07",
-      "count": 781
-    },
     {
       "date": "2026-10-08",
       "count": 2444
@@ -166,7 +162,11 @@
     },
     {
       "date": "2026-11-06",
-      "count": 536
+      "count": 1412
+    },
+    {
+      "date": "2026-11-07",
+      "count": 474
     }
   ],
   "history": [
@@ -610,22 +610,29 @@
       "totalAssetsUsd": 8242332.17,
       "walletsWithAssets": 248913,
       "netFlowUsd": -53640.76
+    },
+    {
+      "date": "2026-11-07",
+      "agents": 409155,
+      "totalAssetsUsd": 8227311.83,
+      "walletsWithAssets": 249715,
+      "netFlowUsd": -878.15
     }
   ],
   "topProjects": [
     {
       "project": "EvoEvo",
-      "agents": 155203,
-      "share": 0.3806
+      "agents": 156143,
+      "share": 0.3816
     },
     {
       "project": "Ave.ai",
       "agents": 130814,
-      "share": 0.3208
+      "share": 0.3197
     },
     {
       "project": "TermiX",
-      "agents": 48940,
+      "agents": 49087,
       "share": 0.12
     },
     {
@@ -655,7 +662,7 @@
     },
     {
       "project": "APM",
-      "agents": 474,
+      "agents": 476,
       "share": 0.0012
     },
     {
@@ -665,8 +672,8 @@
     },
     {
       "project": "Other",
-      "agents": 53226,
-      "share": 0.1305
+      "agents": 53487,
+      "share": 0.1307
     }
   ],
   "methodology": [
@@ -683,28 +690,28 @@
       "name": "The Graph, Agent0 subgraph",
       "url": "https://thegraph.com/explorer/subgraphs/D6aWqowLkWqBgcqmpNKXuNikPkob24ADXCciiP8Hvn1K",
       "detail": "subgraph D6aW…vn1K, registry 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
-      "asOf": "2026-11-06T12:10:32.026Z",
-      "value": 407805
+      "asOf": "2026-11-07T11:07:00.397Z",
+      "value": 409155
     },
     "crossCheck": {
       "name": "8004scan",
       "url": "https://8004scan.io/agents?chain=56",
       "detail": "chain id 56",
-      "asOf": "2026-11-06T12:10:32.026Z",
-      "value": 374709
+      "asOf": "2026-11-07T11:07:00.397Z",
+      "value": 376053
     },
     "holdings": {
       "name": "On-chain via Multicall3",
       "url": "https://bscscan.com/address/0xcA11bde05977b3631167028862bE2a173976CA11",
-      "detail": "RPC bsc-rpc.publicnode.com, 325,570 wallets, BNB, USDT, USDC",
-      "asOf": "2026-11-06T12:11:41.832Z"
+      "detail": "RPC bsc-rpc.publicnode.com, 326,638 wallets, BNB, USDT, USDC",
+      "asOf": "2026-11-07T11:08:06.560Z"
     },
     "prices": {
       "name": "Binance spot",
       "url": "https://www.binance.com/en/trade/BNB_USDT",
       "detail": "BNBUSDT",
-      "asOf": "2026-11-06T12:11:41.832Z",
-      "value": 696.37
+      "asOf": "2026-11-07T11:08:06.560Z",
+      "value": 694.12
     }
   }
 }
