@@ -1,0 +1,13 @@
+.page { max-width: 720px; padding-top: 36px; }
+.page h1 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 10px; }
+.page h2 { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; margin: 36px 0 12px; }
+.lead { color: var(--text-secondary); font-size: 15px; max-width: 640px; }
+.page p { color: var(--text-secondary); }
+.defs { display: grid; grid-template-columns: 170px 1fr; gap: 10px 20px; margin: 0; }
+.defs dt { font-weight: 500; color: var(--text-primary); }
+.defs dd { margin: 0; color: var(--text-secondary); overflow-wrap: anywhere; }
+.chain { margin-top: 4px; }
+@media (max-width: 600px) {
+  .defs { grid-template-columns: 1fr; gap: 2px 0; }
+  .defs dd { margin-bottom: 10px; }
+}

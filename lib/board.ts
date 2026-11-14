@@ -50,3 +50,19 @@ export async function knownSlugs(): Promise<string[]> {
   const configured = await configuredSlugs();
   return Array.from(new Set([...published, ...configured]));
 }
+
+/** Public path of a committed chain logo (public/chains/<slug>.svg), or undefined when there is none. */
+export async function chainLogo(slug: string): Promise<string | undefined> {
+  if (!SLUG.test(slug)) return undefined;
+  try {
+    await fs.access(path.join(process.cwd(), "public", "chains", `${slug}.svg`));
+    return `/chains/${slug}.svg`;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Chain links for the header switcher, with logos resolved. */
+export async function chainLinks(index: IndexPayload | null): Promise<{ slug: string; name: string; color: string; logo?: string }[]> {
+  return Promise.all((index?.chains ?? []).map(async (c) => ({ slug: c.slug, name: c.name, color: c.color, logo: await chainLogo(c.slug) })));
+}

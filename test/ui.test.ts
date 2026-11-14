@@ -8,6 +8,7 @@ import { configuredSlugs, knownSlugs, readBoard, readIndex } from "../lib/board"
 import {
   formatAmount,
   formatCompact,
+  formatDate,
   formatDayShort,
   formatInt,
   formatPercent,
@@ -74,6 +75,11 @@ describe("lib/format", () => {
     expect(formatAmount(0.12345, "BNB")).toBe("0.1235 BNB");
   });
 
+  test("date only, no time or zone", () => {
+    expect(formatDate("2026-09-18T09:03:35.182Z")).toBe("18 Sep 2026");
+    expect(formatDate("nope")).toBe("unknown");
+  });
+
   test("relative time is deterministic with an injected now", () => {
     const now = new Date("2026-09-04T12:00:00Z");
     expect(formatRelative("2026-09-04T11:59:30Z", now)).toBe("just now");
@@ -90,18 +96,15 @@ describe("lib/format", () => {
 });
 
 describe("components", () => {
-  test("KpiCard renders title, description, centred number and footer", async () => {
+  test("KpiCard shows the title once, the number, and the definition behind the info control", async () => {
     const { renderToString } = await import("react-dom/server");
     const { KpiCard } = await import("../components/KpiCard");
     const { createElement } = await import("react");
-    const html = renderToString(
-      createElement(KpiCard, { title: "Total agents", description: "Registered ERC-8004 agents", value: "334,195", chainName: "BNB Chain", asOf: "2026-09-04T14:00:00Z" }),
-    );
-    expect(html).toContain("Registered ERC-8004 agents");
+    const html = renderToString(createElement(KpiCard, { id: "agents", title: "Total agents", definition: "Registered ERC-8004 agents.", value: "334,195" }));
+    expect(html).toContain("Registered ERC-8004 agents.");
     expect(html).toContain("334,195");
-    expect(html.split("Total agents").length).toBe(3); // header and repeated under the number
-    expect(html).toContain("BNB Chain");
-    expect(html).toContain("Updated ");
+    expect(html.split("Total agents").length).toBe(2); // title appears once
+    expect(html).not.toContain("Updated ");
   });
 
   test("Donut draws up to six named slices plus Other and a legend", async () => {
@@ -118,33 +121,16 @@ describe("components", () => {
     expect(html).toContain('role="img"');
   });
 
-  test("DashboardNotes lists the six metrics and the token scope", async () => {
+  test("KpiCard renders the title, the number and a tooltip definition", async () => {
     const { renderToString } = await import("react-dom/server");
-    const { DashboardNotes } = await import("../components/DashboardNotes");
+    const { KpiCard } = await import("../components/KpiCard");
     const { createElement } = await import("react");
-    const html = renderToString(createElement(DashboardNotes, { chainName: "BNB Chain", tokens: ["BNB", "USDT", "USDC"], agentsSource: "The Graph, Agent0 subgraph", crossCheck: "8004scan" }));
-    for (const t of ["Total agents:", "Unique wallets:", "Wallets with assets:", "Total assets:", "Total volume:", "Active agent wallets:", "Top projects:"]) expect(html).toContain(t);
-    expect(html).toContain("cross-checked against 8004scan");
+    const html = renderToString(createElement(KpiCard, { id: "assets", title: "Total assets (USD)", definition: "Current value held in BNB, USDT, USDC.", value: "$10,398,708" }));
+    expect(html).toContain("Total assets (USD)");
+    expect(html).toContain("$10,398,708");
+    expect(html).toContain('role="tooltip"');
+    expect(html).toContain('id="tip-assets"');
     expect(html).toContain("BNB, USDT, USDC");
     expect(html).not.toContain("\u2014");
-  });
-
-  test("ChainTabs marks the active chain and disables unpublished ones", async () => {
-    const { renderToString } = await import("react-dom/server");
-    const { ChainTabs } = await import("../components/ChainTabs");
-    const { createElement } = await import("react");
-    const html = renderToString(
-      createElement(ChainTabs, {
-        active: "bnb",
-        chains: [
-          { slug: "bnb", name: "BNB Chain", color: "#f0b90b", published: true },
-          { slug: "base", name: "BASE", color: "#0052ff", published: false },
-        ],
-      }),
-    );
-    expect(html).toContain('aria-current="page"');
-    expect(html).toContain('href="/bnb"');
-    expect(html).not.toContain('href="/base"');
-    expect(html).toContain('title="No data yet"');
   });
 });

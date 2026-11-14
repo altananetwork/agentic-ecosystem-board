@@ -89,6 +89,13 @@ export function formatUtc(iso: string): string {
   return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}, ${two(d.getUTCHours())}:${two(d.getUTCMinutes())} UTC`;
 }
 
+/** "18 Sep 2026", date only, UTC */
+export function formatDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "unknown";
+  return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
 /** "4 Sep" for chart axes; input YYYY-MM-DD */
 export function formatDayShort(ymd: string): string {
   const d = new Date(`${ymd}T00:00:00Z`);

@@ -1,45 +1,30 @@
-import { RelativeTime } from "./RelativeTime";
+import { InfoTip } from "./InfoTip";
 import styles from "./KpiCard.module.css";
 
-/**
- * A Dune-style counter: title and short description up top, one big centred number
- * with the title repeated under it, and a footer with the chain name and freshness.
- */
+/** One number per card. The title names it, the info control explains it. */
 export function KpiCard({
+  id,
   title,
-  description,
+  definition,
   value,
   fullValue,
-  chainName,
-  asOf,
 }: {
+  /** stable id for the tooltip, unique on the page */
+  id: string;
   title: string;
-  description: string;
+  /** what the number measures, one or two short sentences */
+  definition: string;
   value: string;
   /** full-precision value for the hover title */
   fullValue?: string;
-  chainName: string;
-  asOf: string;
 }) {
   return (
     <div className={styles.card}>
       <div className={styles.head}>
-        <div className={styles.title}>{title}</div>
-        <div className={styles.desc}>{description}</div>
+        <span className={styles.title}>{title}</span>
+        <InfoTip id={`tip-${id}`} text={definition} />
       </div>
-      <div className={styles.body}>
-        <div className={styles.value} title={fullValue}>{value}</div>
-        <div className={styles.repeat}>{title}</div>
-      </div>
-      <div className={styles.foot}>
-        <span className={styles.chain}>{chainName}</span>
-        <span className={styles.fresh}>
-          <RelativeTime iso={asOf} prefix="Updated " />
-          <span className={styles.badge} aria-hidden>
-            <svg viewBox="0 0 12 12" width="10" height="10"><path d="M2.5 6.2l2.3 2.3 4.7-4.9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </span>
-        </span>
-      </div>
+      <div className={styles.value} title={fullValue}>{value}</div>
     </div>
   );
 }
