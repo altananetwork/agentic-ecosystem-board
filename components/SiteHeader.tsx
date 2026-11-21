@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SITE_NAME, TAGLINE } from "@/lib/site";
 import { ChainSwitcher, type ChainLink } from "./ChainSwitcher";
+import { ThemeToggle } from "./ThemeToggle";
 import styles from "./SiteHeader.module.css";
 
 export function SiteHeader({ chains, active }: { chains: ChainLink[]; active?: string }) {
@@ -11,7 +12,10 @@ export function SiteHeader({ chains, active }: { chains: ChainLink[]; active?: s
           <Link href="/" className={styles.title}>{SITE_NAME}</Link>
           <span className={styles.tagline}>{TAGLINE}</span>
         </div>
-        <ChainSwitcher chains={chains} active={active} />
+        <div className={styles.controls}>
+          <ChainSwitcher chains={chains} active={active} />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

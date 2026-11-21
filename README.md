@@ -1,4 +1,4 @@
-# Agentic Ecosystem Board
+# Onchain Agents Ecosystem
 
 Open data on ERC-8004 agents, their owner wallets and holdings, per chain. Public site, public data, refreshed daily by a keyless pipeline that anyone can run.
 
